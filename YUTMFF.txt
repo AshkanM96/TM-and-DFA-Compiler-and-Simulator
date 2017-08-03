@@ -1,0 +1,37 @@
+York-University-Turing-Machine-File-Format(YUTMFF)
+
+• They use a 1-way infinite tape.
+
+• The tape alphabet has two different special symbols, *blank* and *leftend* that are not part of the
+input alphabet.
+
+• Initially, if the input string is w, the tape contains *leftend*w at the left end of the tape,
+and the rest of the tape contains only *blank* symbols. The head of the Turing machine is
+initially positioned at the first character of the input string w (i.e., at the tape’s second
+square).
+
+• Whenever the Turing machine sees the *leftend* symbol, it must leave it unchanged and move
+right (but it can change state).
+
+We also make some naming conventions. We assume that the state set of the Turing
+machine is Q = {q0, q1, . . . , qn−1} where n ≥ 3 and the tape alphabet of the Turing machine
+is Γ = {c0, c1, . . . , cm−1} where m ≥ 3. We also assume that q0 is the initial state, qn−2 is
+the accepting state and qn−1 is the rejecting state. We assume that the input alphabet is
+Σ = {c0, c1, . . . , ck−1} where 0 ≤ k ≤ m − 2 and cm−2 = *blank* and cm−1 = *leftend*.
+
+We now explain how to describe, using YUTMFF, a Turing machine that follows the
+conventions described above. The first line of the file contains the three integers n, m, and
+k, separated by single spaces. (Recall that these are the sizes of the state set, tape alphabet
+and input alphabet, respectively.)
+Each character in the tape alphabet has a name. The second line of the file contains m−2
+strings separated by single spaces that give the names of the characters c0, c1, . . . , cm−3. We
+use the name *blank* to represent cm−2 and *leftend* to represent cm−1.
+
+The third line contains a non-negative integer T. Following this, there are T lines. Each of these remaining lines
+of the description contains five items i, a, i0, a0, d separated by single spaces, where i and i0 are integers with
+0 ≤ i ≤ n−3 and 0 ≤ i0 ≤ n − 1 (inclusive), a and a0 are names of characters in the tape alphabet and d is a single character
+that is either L or R. This line indicates that δ(qi, a) = (qi0, a0, d). No two lines should have the same i and a.
+
+Note that no transitions are given for situations when the machine is in state qn−2 or qn−1 since those are the
+accepting and rejecting states. If no transition is given to describe δ(qi, a) for a non-halting state qi, then it is assumed that
+δ(qi, a) = (qi, a, R).
