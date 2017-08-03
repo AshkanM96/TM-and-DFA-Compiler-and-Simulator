@@ -28,7 +28,7 @@ either be a character name in {σ0, . . . , σm−1} or should be the string emp
 ε-transition. There should be one line containing i x j if and only if qj ∈ δ(qi, x).
 
 Line t+1 is the command line which can be used to control some of the simulation parameters. The format is as follows:
-integer space integer space integer space string. The first integer describes the maximum number of strings to test. The second integer describes the minimum length of the strings to test. The third integer decribes the maximum length of the strings to test and finally the string is the initial string to start the testing from. The command line can have 0, 1, 2, 3 or 4 entries decribed by the above format. If it has only 2, the second integer will be processed as the maximum length and not the minimum length.
+integer space integer space integer space string. The first integer describes the maximum number of strings to test. The second integer describes the minimum length of the strings to test. The third integer decribes the maximum length of the strings to test and finally the string is the initial string to start the testing from. The command line can have 0, 1, 2, 3 or 4 entries decribed by the above format. If it has only 2, the second integer will be processed as the maximum length and not the minimum length. If it has less than the maximum number of entries (4), default values will be used for non-specified variables.
 
 Anything after these t+1 lines will be ignored, so you can use them to write comments or
 explanations.
