@@ -14,4 +14,4 @@
 
 Comments:
 
-A description of a Turing-Machine in YUTMFF which increments a binary string and writes 2 ones after each single increment.
+A Turing-Machine in which increments a binary string and writes 2 ones after each single increment.
