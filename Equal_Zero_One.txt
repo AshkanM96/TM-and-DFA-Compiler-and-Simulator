@@ -1,0 +1,21 @@
+8 5 2
+0 1 X
+18
+0 0 1 X R
+0 blank 2 blank L
+1 0 1 0 L
+1 1 1 1 L
+1 X 1 X L
+1 blank 1 blank L
+1 leftend 3 leftend R
+2 1 2 1 L
+2 X 2 X L
+2 leftend 4 leftend R
+3 1 5 X L
+3 blank 7 blank L
+4 1 7 1 L
+4 blank 6 blank L
+5 0 5 0 L
+5 1 5 1 L
+5 X 5 X L
+5 leftend 0 leftend R
