@@ -17,3 +17,7 @@
 3 0 3 X R
 3 1 4 1 R
 3 blank 0 0 R
+
+Comments:
+
+A Turing-Machine which increments a ternary string.
