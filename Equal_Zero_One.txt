@@ -22,4 +22,4 @@
 
 Comments:
 
-A Turing-Machine which determines wether a binary string has equal number of zeros and ones.
+A Turing-Machine which determines whether a binary string has equal number of zeros and ones.
