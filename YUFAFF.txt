@@ -1,0 +1,50 @@
+York-University-Finite-Automaton-File-Format(YUFAFF)
+
+The YUFAFF is a way to describe a finite automaton in a text file. It can be used for deterministic or non-deterministic automata.
+Suppose you wish to describe an automaton (Q, Σ, δ, q0, F). We shall assume the state
+names are q0, q1, . . . , qn−1, where q0 is the starting state. (If this is not the case, just rename the states.)
+
+The first line of the file contains four positive integers n, m, k and t separated by single
+spaces, where n = |Q|, m = |Σ|, k = |F| and t is the number of lines in the file that will be
+used to describe transitions of the automaton.
+The second line of the file contains m strings σ0, σ1, . . . , σm−1 separated by single spaces.
+These strings are the names of the characters of the input alphabet. These strings should
+be distinct and should not contain any spaces. Ordinarily, you will use single-character strings to name the characters,
+but we allow strings more generally in case you want to talk about an automaton that
+uses an alphabet of non-ASCII input characters. For example, if your input alphabet was
+Σ = {α, β, γ}, you might use the names alpha beta gamma for the characters.
+The third line contains k natural numbers separated by single spaces. These numbers
+are the indices of the accepting states. For example, if the accepting states are q0, q6 and q9
+then the third line of the file should contain 0 6 9.
+
+The following t lines each contain the description of one transition defined by δ.
+For deterministic finite automata, each of these t lines contains a natural number i, a
+character name x and another natural number j, separated by single spaces. There should
+be one line containing i x j if and only if δ(qi, x) = qj. The values should satisfy 0 ≤ i < n,
+0 ≤ j < n, x ∈ {σ0, . . . , σm−1}. For deterministic finite automata, we should have t = mn.
+For non-deterministic finite automata, each of the t lines contains a natural number i,
+a string x and another natural number j, separated by single spaces. The string x should
+either be a character name in {σ0, . . . , σm−1} or should be the string empty to indicate a
+ε-transition. There should be one line containing i x j if and only if qj ∈ δ(qi, x).
+
+Anything after these t lines will be ignored, so you can use them to write comments or
+explanations.
+
+Example: The deterministic automaton shown in Figure 1.14 of Introduction to the Theory of Computation by Michael Sipser could be
+described as follows in YUFAFF:
+3 4 1 12
+<RESET> 0 1 2
+0
+0 <RESET> 0
+0 0 0
+0 1 1
+0 2 2
+1 <RESET> 0
+1 0 1
+1 1 2
+1 2 0
+2 <RESET> 0
+2 0 2
+2 1 0
+2 2 1
+Comment: This file describes the automaton in Figure 1.14 of the textbook.
