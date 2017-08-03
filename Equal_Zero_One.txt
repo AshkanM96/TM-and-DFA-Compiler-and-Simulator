@@ -19,3 +19,7 @@
 5 1 5 1 L
 5 X 5 X L
 5 leftend 0 leftend R
+
+Comments:
+
+A Turing-Machine which determines wether a binary string has equal number of zeros and ones.
