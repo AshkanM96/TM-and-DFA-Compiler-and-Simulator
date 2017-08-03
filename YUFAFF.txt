@@ -27,8 +27,13 @@ a string x and another natural number j, separated by single spaces. The string 
 either be a character name in {σ0, . . . , σm−1} or should be the string empty to indicate a
 ε-transition. There should be one line containing i x j if and only if qj ∈ δ(qi, x).
 
-Anything after these t lines will be ignored, so you can use them to write comments or
+Line t+1 is the command line which can be used to control some of the simulation parameters. The format is as follows:
+integer space integer space integer space string. The first integer describes the maximum number of strings to test. The second integer describes the minimum length of the strings to test. The third integer decribes the maximum length of the strings to test and finally the string is the initial string to start the testing from. The command line can have 0, 1, 2, 3 or 4 entries decribed by the above format. If it has only 2, the second integer will be processed as the maximum length and not the minimum length.
+
+Anything after these t+1 lines will be ignored, so you can use them to write comments or
 explanations.
+
+Note that if no transition is given to describe δ(qi, a), then it is assumed that δ(qi, a) = qi.
 
 Example: The deterministic automaton shown in Figure 1.14 of Introduction to the Theory of Computation by Michael Sipser could be
 described as follows in YUFAFF:
@@ -47,4 +52,5 @@ described as follows in YUFAFF:
 2 0 2
 2 1 0
 2 2 1
+
 Comment: This file describes the automaton in Figure 1.14 of the textbook.
