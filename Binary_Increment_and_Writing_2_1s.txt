@@ -11,3 +11,7 @@
 3 0 3 0 L
 3 1 3 1 L
 3 leftend 0 leftend R
+
+Comments:
+
+A description of a Turing-Machine in YUTMFF which increments a binary string and writes 2 ones after each single increment.
