@@ -1,0 +1,56 @@
+15 2 4 30
+0 1
+8 10 11 13
+0 0 1
+0 1 4
+1 0 2
+1 1 3
+2 0 7
+2 1 8
+3 0 9
+3 1 11
+4 0 5
+4 1 6
+5 0 10
+5 1 12
+6 0 13
+6 1 14
+7 0 7
+7 1 8
+8 0 9
+8 1 11
+9 0 10
+9 1 12
+10 0 7
+10 1 8
+11 0 13
+11 1 14
+12 0 9
+12 1 11
+13 0 10
+13 1 12
+14 0 13
+14 1 14
+
+Comments :
+
+1. This file describes a finite automaton that accepts binary strings if and only if its last character is different from its third last character.
+2. All strings of length less than three are rejected since they do not have a third last character.
+
+3. The states of the automaton, are as follows :
+
+q0 is the empty string.
+q1 is the string 0.
+q2 is the string 00.
+q3 is the string 01.
+q4 is the string 1.
+q5 is the string 10.
+q6 is the string 11.
+q7 is strings that end with 000.
+q8 is strings that end with 001.
+q9 is strings that end with 010.
+q10 is strings that end with 100.
+q11 is strings that end with 011.
+q12 is strings that end with 101.
+q13 is strings that end with 110.
+q14 is strings that end with 111.
