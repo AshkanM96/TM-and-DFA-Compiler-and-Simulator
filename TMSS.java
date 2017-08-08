@@ -1175,6 +1175,7 @@ public class TMSS {
 	}
 
 	private String setLengthRange(int minLength, int maxLength, boolean checkStringsCount) {
+		// save field values in case of restoring
 		int savedMin = this.getMinLength(), savedMax = this.getMaxLength();
 		boolean savedCheckStringsCount = this.checkStringsCount, savedStrChange = this.strChange;
 		try {
@@ -1203,7 +1204,7 @@ public class TMSS {
 	}
 
 	public Object[] setRangeString(int minLength, int maxLength, String initialString) throws IllegalArgumentException {
-		// saved field values in case of restoring
+		// save field values in case of restoring
 		boolean savedIsConstructing = this.isConstructing, savedStrChange = this.strChange;
 		int savedMin = this.getMinLength(), savedMax = this.getMaxLength();
 		try {
@@ -1252,7 +1253,7 @@ public class TMSS {
 
 	public Object[] setRangeArray(int minLength, int maxLength, ArrayList<Integer> initialArray)
 			throws IllegalArgumentException {
-		// saved field values in case of restoring
+		// save field values in case of restoring
 		boolean savedIsConstructing = this.isConstructing, savedStrChange = this.strChange;
 		int savedMin = this.getMinLength(), savedMax = this.getMaxLength();
 		try {
