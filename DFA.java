@@ -10,6 +10,12 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class DFA {
+	/*
+	 * for simplicity, all methods only throw IllegalArgumentException so that only one type of
+	 * exception need be handled but in general, it's better practice to throw other types of exceptions
+	 * when appropriate such as NullPointerException, IllegalStateException and etc.
+	 */
+
 	public static final int MIN_NUM_STATES = 1, MAX_NUM_STATES = 10000, MIN_INPUT_ALPHABET_SIZE = 1,
 			MAX_INPUT_ALPHABET_SIZE = 1000;
 	private int numStates, inputAlphabetSize;
@@ -29,13 +35,27 @@ public class DFA {
 	private boolean[][] defined;
 	private int totalNumTransitions, numDefinedTransitions;
 	private int[] stateNumDefined;
+	/*
+	 * run is used to determine whether this instance actually needs to be run on a testString or if the
+	 * result of any run is already known due to the special nature of the given machine description
+	 */
 	private boolean run;
 
 	public static final String DEFAULT = "default";
 
 	public static final int DEFAULT_MAX_STRING_COUNT = 1000, MAX_STRINGS_COUNT = 100000;
 	private int maxStringCount, actualStringCount, acceptCount, rejectCount;
+	/*
+	 * count holds whether maxStringCount is greater than 1 or not so that the boolean is not
+	 * reevaluated every time that it is needed. checkStringsCount is used to determine when to estimate
+	 * the number of strings to test(stringsCount) so that the time consuming process isn't repeatedly
+	 * performed by the testString length mutator methods
+	 */
 	private boolean count, checkStringsCount = true;
+	/*
+	 * maps testString to accept:stepCount. always construct results with initialCapacity of
+	 * maxStringCount so that the need for resizing, rehashing, ... is greatly decreased
+	 */
 	private HashMap<ArrayList<Integer>, String> results;
 
 	public static final int DEFAULT_MIN_LENGTH = 0, DEFAULT_MAX_LENGTH = 4;
@@ -52,17 +72,27 @@ public class DFA {
 	private boolean includeComments;
 	private StringBuilder comments;
 
+	// cause is the message of the last exception thrown by this instance
 	private String cause;
+	/*
+	 * staticCause is the message of the last exception thrown by one of the static methods or the
+	 * constructors
+	 */
 	private static String staticCause;
 	private int lineNumber;
 
+	/*
+	 * OR strChange with itself so that it's not set to false if it's already true. Put the more
+	 * complicated expression on the right side of the or(||) so that if strChange is already true, the
+	 * expression isn't evaluated due to compiler short-circuiting and some time is saved
+	 */
 	private boolean strChange, comChange;
 	private String savedStr, savedCom;
 
 	public static final int LINE_1_NUM_ENTRIES = 4, COMMAND_LINE_MAX_NUM_ENTRIES = 4;
 
 	public static final int SECONDS_PER_DAY = 86400, SECONDS_PER_HOUR = 3600, SECONDS_PER_MINUTE = 60,
-			MILLISECONDS_PER_SECOND = 1000;
+			MILLISECONDS_PER_SECOND = 1000, NANOSECONDS_PER_MILLISECOND = 1000000;
 	private String time;
 
 	public static final String DEFAULT_FILE_NAME = "machine";
@@ -2108,7 +2138,8 @@ public class DFA {
 
 			this.incrementTestString(testString);
 		}
-		elapsedTime = Math.round((System.nanoTime() - beforeTime) / 1e+6);
+		elapsedTime = DFA.nano2Milli(System.nanoTime() - beforeTime);
+		;
 		this.time = DFA.formatTime(elapsedTime);
 
 		this.actualStringCount = Math.min(this.getMaxStringCount(), count);
@@ -2342,6 +2373,14 @@ public class DFA {
 		return 0;
 	}
 
+	public static long nano2Milli(long nanoSeconds) throws IllegalArgumentException {
+		if (nanoSeconds < 0) {
+			DFA.staticCause = "Given time in nanoseconds(" + nanoSeconds + ") is negative.";
+			DFA.illegalArg(DFA.getStaticCause());
+		}
+		return Math.round((double) nanoSeconds / DFA.NANOSECONDS_PER_MILLISECOND);
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -2442,7 +2481,7 @@ public class DFA {
 		}
 
 		// comments
-		output.append(this.getIncludeComments() ? this.comments : "");
+		output.append("\n" + (this.getIncludeComments() ? this.comments : ""));
 
 		this.strChange = false;
 		return (this.savedStr = output.toString());
