@@ -10,6 +10,12 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class TMS {
+	/*
+	 * for simplicity, all methods only throw IllegalArgumentException so that only one type of
+	 * exception need be handled but in general, it's better practice to throw other types of exceptions
+	 * when appropriate such as NullPointerException, IllegalStateException and etc.
+	 */
+
 	public static final int MIN_NUM_STATES = 3, MAX_NUM_STATES = 10000, MIN_INPUT_ALPHABET_SIZE = 1,
 			MAX_TAPE_ALPHABET_SIZE = 1000;
 	private int numStates, tapeAlphabetSize, inputAlphabetSize;
@@ -44,7 +50,18 @@ public class TMS {
 
 	public static final int DEFAULT_MAX_STRING_COUNT = 100, MAX_STRINGS_COUNT = 100000;
 	private int maxStringCount, actualStringCount, acceptCount, rejectCount, infiniteCount;
+	/*
+	 * count holds whether maxStringCount is greater than 1 or not so that the boolean is not
+	 * reevaluated every time that it is needed. checkStringsCount is used to determine when to estimate
+	 * the number of strings to test(stringsCount) so that the time consuming process isn't repeatedly
+	 * performed by the testString length mutator methods
+	 */
 	private boolean count, checkStringsCount = true;
+	/*
+	 * maps testString to output:stepCount:elapsedProcessTime. always construct results with
+	 * initialCapacity of maxStringCount so that the need for resizing, rehashing, ... is greatly
+	 * decreased
+	 */
 	private HashMap<ArrayList<Integer>, String> results;
 
 	public static final int DEFAULT_MIN_LENGTH = 0, DEFAULT_MAX_LENGTH = 5;
@@ -61,10 +78,10 @@ public class TMS {
 	public static final boolean DEFAULT_TRACE = false;
 	private boolean trace;
 	// 1 hour in milliseconds
-	public static final long DEFAULT_MAX_PROCESS_TIME = 3600000;
+	public static final long MIN_PROCESS_TIME = 0, DEFAULT_MAX_PROCESS_TIME = 3600000;
 	public static final boolean DEFAULT_TIME_LIMIT = false;
 	private boolean timeLimit;
-	private long maxProcessTime, elapsedProcessTime;
+	private long maxProcessTime, nanoMaxProcessTime, elapsedProcessTime;
 
 	private boolean isScanning, isConstructing, isSimulating;
 
@@ -72,10 +89,20 @@ public class TMS {
 	private boolean includeComments;
 	private StringBuilder comments;
 
+	// cause is the message of the last exception thrown by this instance
 	private String cause;
+	/*
+	 * staticCause is the message of the last exception thrown by one of the static methods or the
+	 * constructors
+	 */
 	private static String staticCause;
 	private int lineNumber;
 
+	/*
+	 * OR strChange with itself so that it's not set to false if it's already true. Put the more
+	 * complicated expression on the right side of the or(||) so that if strChange is already true, the
+	 * expression isn't evaluated due to compiler short-circuiting and some time is saved
+	 */
 	private boolean strChange, comChange;
 	private String savedStr, savedCom;
 
@@ -85,6 +112,7 @@ public class TMS {
 	public static final int SECONDS_PER_MONTH = 18446400, SECONDS_PER_WEEK = 604800, SECONDS_PER_DAY = 86400,
 			SECONDS_PER_HOUR = 3600, SECONDS_PER_MINUTE = 60, MILLISECONDS_PER_SECOND = 1000,
 			NANOSECONDS_PER_MILLISECOND = 1000000;
+	public static final long MAX_PROCESS_TIME = Long.MAX_VALUE / TMS.NANOSECONDS_PER_MILLISECOND;
 	private String time;
 
 	public static final String DEFAULT_FILE_NAME = "machine";
@@ -391,9 +419,10 @@ public class TMS {
 		}
 
 		this.tapeAlphabet = new String[this.tapeAlphabetSize = tapeAlphabetSize];
+		// copy sorted input alphabet into (sorted) tape alphabet
 		System.arraycopy(this.inputAlphabet, 0, this.tapeAlphabet, 0, inputAlphabetSize);
 		String s;
-		for (int i = 0, index = inputAlphabetSize; i < tapeAlphabet.length && index < this.getBlankIndex(); i++) {
+		for (int i = 0, index = inputAlphabetSize; index < this.getBlankIndex(); i++) {
 			if (this.inputCharIndexOf(s = tapeAlphabet[i]) == -1) {
 				// copy tapeAlphabet characters that aren't in the inputAlphabet in sorted
 				// order after the inputAlphabet characters
@@ -401,7 +430,7 @@ public class TMS {
 			}
 		}
 		System.arraycopy(TMS.SPECIAL_TAPE_CHARS, 0, this.tapeAlphabet, this.getBlankIndex(),
-				TMS.NUM_SPECIAL_TAPE_CHARS);
+				TMS.NUM_SPECIAL_TAPE_CHARS); // copy special tape chars
 
 		this.tapeIndex = new HashMap<String, Integer>(tapeAlphabetSize);
 		for (int i = 0; i < tapeAlphabetSize; i++) {
@@ -1518,19 +1547,21 @@ public class TMS {
 	}
 
 	public long getMaxProcessTime() {
-		if (this.isSimulating) { // return in nanoseconds
-			return (TMS.NANOSECONDS_PER_MILLISECOND * this.maxProcessTime);
-		}
 		return this.maxProcessTime;
 	}
 
 	public static boolean isValidMaxProcessTime(long maxProcessTime) {
-		return (maxProcessTime >= 0);
+		return (maxProcessTime >= TMS.MIN_PROCESS_TIME && maxProcessTime <= TMS.MAX_PROCESS_TIME);
+	}
+
+	public static String getMaxProcessTimeRange() {
+		return ("[" + TMS.MIN_PROCESS_TIME + ", " + TMS.MAX_PROCESS_TIME + "]");
 	}
 
 	public long validateMaxProcessTime(long maxProcessTime) throws IllegalArgumentException {
 		if (!TMS.isValidMaxProcessTime(maxProcessTime)) {
-			this.cause = "Given max process time(" + maxProcessTime + ") is negative.";
+			this.cause = "Given max process time(" + maxProcessTime + ") isn't in the range of "
+					+ TMS.getMaxProcessTimeRange() + ".";
 			this.illegalArg();
 		}
 		return maxProcessTime;
@@ -1541,6 +1572,7 @@ public class TMS {
 		this.strChange = this.strChange
 				|| (this.getMaxProcessTime() != maxProcessTime && this.getTimeLimit() && this.getMaxStringCount() != 0);
 		this.elapsedProcessTime = 0;
+		this.nanoMaxProcessTime = maxProcessTime * TMS.NANOSECONDS_PER_MILLISECOND;
 		return (this.maxProcessTime = maxProcessTime);
 	}
 
@@ -2475,7 +2507,7 @@ public class TMS {
 		// maps testString to output:stepCount:elapsedProcessTime
 		this.results = new HashMap<ArrayList<Integer>, String>(this.getMaxStringCount());
 
-		long beforeTime = System.nanoTime(), elapsedTime;
+		long beforeTime = System.nanoTime();
 		int count = 0;
 		while (testString.size() <= this.getMaxLength() && ++count <= this.getMaxStringCount()) {
 			int output = this.run(testString, count, print);
@@ -2503,7 +2535,7 @@ public class TMS {
 
 			this.incrementTestString(testString);
 		}
-		elapsedTime = Math.round((System.nanoTime() - beforeTime) / 1e+6);
+		long elapsedTime = TMS.nano2Milli(System.nanoTime() - beforeTime);
 		this.time = TMS.formatTime(elapsedTime);
 
 		this.actualStringCount = Math.min(this.getMaxStringCount(), count);
@@ -2561,22 +2593,10 @@ public class TMS {
 		}
 
 		this.stepCount = this.elapsedProcessTime = 0;
-		long before = System.nanoTime(), after;
+		long beforeTime;
 		// run the machine for maxSteps steps
 		while (state < this.getAcceptState() && ++this.stepCount <= this.getMaxSteps()) {
-			if (this.getTimeLimit()) {
-				after = System.nanoTime();
-				this.elapsedProcessTime += after - before;
-				before = after;
-				if (this.getElapsedProcessTime() > this.getMaxProcessTime()) {
-					this.elapsedProcessTime = Math.round(this.getElapsedProcessTime() / 1e+6);
-					if (print && this.getTrace()) {
-						System.out.println("Turing machine ran for " + TMS.comma(--this.stepCount) + this.getSteps()
-								+ " on " + s + " without halting in " + this.formatTime() + ".");
-					}
-					return -2;
-				}
-			}
+			beforeTime = this.getTimeLimit() ? System.nanoTime() : 0;
 
 			if (headPos == tape.size()) {
 				// extend tape if machine has run beyond right end
@@ -2595,8 +2615,21 @@ public class TMS {
 			if (this.getTrace()) {
 				this.printConfig(tape, state, headPos);
 			}
+
+			// keep track of process time
+			if (this.getTimeLimit()) {
+				this.elapsedProcessTime += System.nanoTime() - beforeTime;
+				if (this.getElapsedProcessTime() > this.nanoMaxProcessTime) {
+					this.elapsedProcessTime = TMS.nano2Milli(this.getElapsedProcessTime());
+					if (print && this.getTrace()) {
+						System.out.println("Turing machine ran for " + TMS.comma(--this.stepCount) + this.getSteps()
+								+ " on " + s + " without halting in " + this.formatTime() + ".");
+					}
+					return -2;
+				}
+			}
 		}
-		this.elapsedProcessTime = this.getTimeLimit() ? Math.round(this.getElapsedProcessTime() / 1e+6) : 0;
+		this.elapsedProcessTime = this.getTimeLimit() ? TMS.nano2Milli(this.getElapsedProcessTime()) : 0;
 
 		if (state == this.getAcceptState()) {
 			if (print && this.getTrace()) {
@@ -2928,6 +2961,14 @@ public class TMS {
 		return 0;
 	}
 
+	public static long nano2Milli(long nanoSeconds) throws IllegalArgumentException {
+		if (nanoSeconds < 0) {
+			TMS.staticCause = "Given time in nanoseconds(" + nanoSeconds + ") is negative.";
+			TMS.illegalArg(TMS.getStaticCause());
+		}
+		return Math.round((double) nanoSeconds / TMS.NANOSECONDS_PER_MILLISECOND);
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -2944,8 +2985,6 @@ public class TMS {
 		} else if (this.getInputAlphabetSize() != other.getInputAlphabetSize()) {
 			return false;
 		} else if (!this.tapeIndex.equals(other.tapeIndex)) {
-			return false;
-		} else if (!this.inputIndex.equals(other.inputIndex)) {
 			return false;
 		}
 
@@ -3036,7 +3075,7 @@ public class TMS {
 		}
 
 		// comments
-		output.append(this.getIncludeComments() ? this.comments : "");
+		output.append("\n" + (this.getIncludeComments() ? this.comments : ""));
 
 		this.strChange = false;
 		return (this.savedStr = output.toString());
