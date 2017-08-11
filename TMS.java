@@ -204,13 +204,13 @@ public class TMS {
 	}
 
 	public static String getNumStatesRange() {
-		return ("[" + TMS.MIN_NUM_STATES + ", " + TMS.MAX_NUM_STATES + "]");
+		return ('[' + TMS.MIN_NUM_STATES + ", " + TMS.MAX_NUM_STATES + ']');
 	}
 
 	public int validateNumStates(int numStates) throws IllegalArgumentException {
 		if (!TMS.isValidNumStates(numStates)) {
 			this.cause = "Given number of states(" + numStates + ") isn't in the range of " + TMS.getNumStatesRange()
-					+ ".";
+					+ '.';
 			this.illegalArg();
 		}
 		return numStates;
@@ -229,7 +229,7 @@ public class TMS {
 	}
 
 	public String getInitialStateRange() {
-		return ("[0, " + (this.getAcceptState() - 1) + "]");
+		return ("[0, " + (this.getAcceptState() - 1) + ']');
 	}
 
 	public int validateInitialState(int initialState) {
@@ -238,7 +238,7 @@ public class TMS {
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += "(" + initialState + ") isn't in the range of " + this.getInitialStateRange() + ".";
+			this.cause += '(' + initialState + ") isn't in the range of " + this.getInitialStateRange() + '.';
 			this.illegalArg();
 		}
 		return initialState;
@@ -249,7 +249,7 @@ public class TMS {
 	}
 
 	public String getFinalStateRange() {
-		return ("[0, " + this.getRejectState() + "]");
+		return ("[0, " + this.getRejectState() + ']');
 	}
 
 	public int validateFinalState(int finalState) {
@@ -258,7 +258,7 @@ public class TMS {
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += "(" + finalState + ") isn't in the range of " + this.getFinalStateRange() + ".";
+			this.cause += '(' + finalState + ") isn't in the range of " + this.getFinalStateRange() + '.';
 			this.illegalArg();
 		}
 		return finalState;
@@ -281,13 +281,13 @@ public class TMS {
 	}
 
 	public String getTapeCharIndexRange() {
-		return ("[0, " + this.getLeftendIndex() + "]");
+		return ("[0, " + this.getLeftendIndex() + ']');
 	}
 
 	public int validateTapeCharIndex(int index) throws IllegalArgumentException {
 		if (!this.isValidTapeCharIndex(index)) {
 			this.cause = "Given tape character index(" + index + ") isn't in the range of "
-					+ this.getTapeCharIndexRange() + ".";
+					+ this.getTapeCharIndexRange() + '.';
 			this.illegalArg();
 		}
 		return index;
@@ -306,13 +306,13 @@ public class TMS {
 	}
 
 	public String getInputCharIndexRange() {
-		return ("[0, " + this.getMaxInputIndex() + "]");
+		return ("[0, " + this.getMaxInputIndex() + ']');
 	}
 
 	public int validateInputCharIndex(int index) throws IllegalArgumentException {
 		if (!this.isValidInputCharIndex(index)) {
 			this.cause = "Given input character index(" + index + ") isn't in the range of "
-					+ this.getInputCharIndexRange() + ".";
+					+ this.getInputCharIndexRange() + '.';
 			this.illegalArg();
 		}
 		return index;
@@ -327,7 +327,7 @@ public class TMS {
 
 	public int tapeCharIndexOf(String s) {
 		Integer index = this.tapeIndex.get(s);
-		return (index != null ? (int) index : -1);
+		return (index != null ? index : -1);
 	}
 
 	public int validateTapeChar(String s, boolean isInitial) throws IllegalArgumentException {
@@ -337,7 +337,7 @@ public class TMS {
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += "(" + s + ") isn't a valid tape character.";
+			this.cause += '(' + s + ") isn't a valid tape character.";
 			this.illegalArg();
 		}
 		return index;
@@ -385,7 +385,7 @@ public class TMS {
 
 	public int inputCharIndexOf(String s) {
 		Integer index = this.inputIndex.get(s);
-		return (index != null ? (int) index : -1);
+		return (index != null ? index : -1);
 	}
 
 	public int validateInputChar(String s) throws IllegalArgumentException {
@@ -472,19 +472,19 @@ public class TMS {
 		String tapeChar;
 		for (int i = 0; i < tapeAlphabet.length; i++) {
 			if ((tapeChar = tapeAlphabet[i]) == null) {
-				this.cause = "Given tape alphabet isn't valid since it contains null at index " + i + ".";
+				this.cause = "Given tape alphabet isn't valid since it contains null at index " + i + '.';
 				this.illegalArg();
 			} else if (tapeChar.isEmpty()) {
-				this.cause = "\"" + tapeChar + "\" isn't valid since it's the empty string.";
+				this.cause = '"' + tapeChar + "\" isn't valid since it's the empty string.";
 				this.illegalArg();
 			} else if (TMS.WHITESPACE_PATTERN.matcher(tapeChar).find()) {
-				this.cause = "\"" + tapeChar + "\" isn't valid since it contains whitespace.";
+				this.cause = '"' + tapeChar + "\" isn't valid since it contains whitespace.";
 				this.illegalArg();
 			} else if (tapeIndex.containsKey(tapeChar)) {
-				this.cause = "\"" + tapeChar + "\" has been defined more than once.";
+				this.cause = '"' + tapeChar + "\" has been defined more than once.";
 				this.illegalArg();
 			} else if (TMS.isSpecialTapeChar(tapeChar)) {
-				this.cause = "\"" + tapeChar + "\" isn't valid since it is/contains a special tape character.";
+				this.cause = '"' + tapeChar + "\" isn't valid since it is/contains a special tape character.";
 				this.illegalArg();
 			}
 			tapeIndex.put(tapeChar, i);
@@ -507,13 +507,13 @@ public class TMS {
 	// the absolute tapeAlphabetSize range without taking the value of
 	// inputAlphabetSize into account
 	public static String getTapeAlphabetSizeRange() {
-		return ("[" + TMS.MIN_TAPE_ALPHABET_SIZE + ", " + TMS.MAX_TAPE_ALPHABET_SIZE + "]");
+		return ('[' + TMS.MIN_TAPE_ALPHABET_SIZE + ", " + TMS.MAX_TAPE_ALPHABET_SIZE + ']');
 	}
 
 	public int validateTapeAlphabetSize(int tapeAlphabetSize) throws IllegalArgumentException {
 		if (!TMS.isValidTapeAlphabetSize(tapeAlphabetSize)) {
 			this.cause = "Given tape alphabet size(" + tapeAlphabetSize + ") isn't in the range of "
-					+ TMS.getTapeAlphabetSizeRange() + ".";
+					+ TMS.getTapeAlphabetSizeRange() + '.';
 			this.illegalArg();
 		}
 		return tapeAlphabetSize;
@@ -524,13 +524,13 @@ public class TMS {
 	}
 
 	public static String getInputAlphabetSizeRange() {
-		return ("[" + TMS.MIN_INPUT_ALPHABET_SIZE + ", " + TMS.MAX_INPUT_ALPHABET_SIZE + "]");
+		return ('[' + TMS.MIN_INPUT_ALPHABET_SIZE + ", " + TMS.MAX_INPUT_ALPHABET_SIZE + ']');
 	}
 
 	public static int validateInputAlphabetSize(int inputAlphabetSize) throws IllegalArgumentException {
 		if (!TMS.isValidInputAlphabetSize(inputAlphabetSize)) {
 			TMS.staticCause = "Given input alphabet size(" + inputAlphabetSize + ") isn't in the range of "
-					+ TMS.getInputAlphabetSizeRange() + ".";
+					+ TMS.getInputAlphabetSizeRange() + '.';
 			TMS.illegalArg(TMS.getStaticCause());
 		}
 		return inputAlphabetSize;
@@ -545,14 +545,14 @@ public class TMS {
 
 	public static String getTapeAlphabetSizeRange(int inputAlphabetSize) throws IllegalArgumentException {
 		TMS.validateInputAlphabetSize(inputAlphabetSize);
-		return ("[" + (inputAlphabetSize + TMS.NUM_SPECIAL_TAPE_CHARS) + ", " + TMS.MAX_TAPE_ALPHABET_SIZE + "]");
+		return ('[' + (inputAlphabetSize + TMS.NUM_SPECIAL_TAPE_CHARS) + ", " + TMS.MAX_TAPE_ALPHABET_SIZE + ']');
 	}
 
 	public void validateTapeAlphabetSize(int tapeAlphabetSize, int inputAlphabetSize) throws IllegalArgumentException {
 		try {
 			if (!TMS.isValidTapeAlphabetSize(tapeAlphabetSize, inputAlphabetSize)) {
 				this.cause = "Given tape alphabet size(" + tapeAlphabetSize + ") isn't in the range of "
-						+ TMS.getTapeAlphabetSizeRange(inputAlphabetSize) + ".";
+						+ TMS.getTapeAlphabetSizeRange(inputAlphabetSize) + '.';
 				this.illegalArg();
 			}
 		} catch (IllegalArgumentException ex) {
@@ -701,14 +701,14 @@ public class TMS {
 
 	private String getTransition(int initialState, int initialCharIndex, boolean format) {
 		if (format) {
-			return ("delta(" + initialState + "," + this.tapeAlphabet[initialCharIndex] + ") = ("
-					+ this.nextState[initialState][initialCharIndex] + ","
-					+ this.tapeAlphabet[this.charToWriteIndex[initialState][initialCharIndex]] + ","
-					+ this.direction[initialState][initialCharIndex] + ")");
+			return ("delta(" + initialState + ',' + this.tapeAlphabet[initialCharIndex] + ") = ("
+					+ this.nextState[initialState][initialCharIndex] + ','
+					+ this.tapeAlphabet[this.charToWriteIndex[initialState][initialCharIndex]] + ','
+					+ this.direction[initialState][initialCharIndex] + ')');
 		}
-		return (initialState + " " + this.tapeAlphabet[initialCharIndex] + " "
-				+ this.nextState[initialState][initialCharIndex] + " "
-				+ this.tapeAlphabet[this.charToWriteIndex[initialState][initialCharIndex]] + " "
+		return (initialState + ' ' + this.tapeAlphabet[initialCharIndex] + ' '
+				+ this.nextState[initialState][initialCharIndex] + ' '
+				+ this.tapeAlphabet[this.charToWriteIndex[initialState][initialCharIndex]] + ' '
 				+ this.direction[initialState][initialCharIndex]);
 	}
 
@@ -716,7 +716,7 @@ public class TMS {
 			throws IllegalArgumentException {
 		int initialCharIndex = (int) (this.validateTransition(initialState, initialChar)[2]);
 		String transition = this.getTransition(initialState, initialCharIndex, format);
-		System.out.print(print ? (transition + "\n") : "");
+		System.out.print(print ? (transition + '\n') : "");
 		return transition;
 	}
 
@@ -742,7 +742,7 @@ public class TMS {
 		String[] result = new String[this.getTapeAlphabetSize()];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = this.getTransition(initialState, i, format);
-			System.out.print(print ? (result[i] + "\n") : "");
+			System.out.print(print ? (result[i] + '\n') : "");
 		}
 		return result;
 	}
@@ -769,7 +769,7 @@ public class TMS {
 		for (int i = 0; i < this.getAcceptState(); i++) {
 			for (int j = 0; j < this.getTapeAlphabetSize(); j++) {
 				result[index++] = this.getTransition(i, j, format);
-				System.out.print(print ? (result[index - 1] + "\n") : "");
+				System.out.print(print ? (result[index - 1] + '\n') : "");
 			}
 		}
 		return result;
@@ -797,7 +797,7 @@ public class TMS {
 		String transition = (this.defined[initialState][initialCharIndex]
 				? this.getTransition(initialState, initialCharIndex, format)
 				: null);
-		System.out.print(print ? (transition + "\n") : "");
+		System.out.print(print ? (transition + '\n') : "");
 		return transition;
 	}
 
@@ -838,7 +838,7 @@ public class TMS {
 		for (int i = 0, index = 0; index < length; i++) {
 			if ((transition = temp[i]) != null) {
 				result[index++] = transition;
-				System.out.print(print ? (transition + "\n") : "");
+				System.out.print(print ? (transition + '\n') : "");
 			}
 		}
 		return result;
@@ -867,7 +867,7 @@ public class TMS {
 			for (int j = 0; j < this.getTapeAlphabetSize() && index < numDef; j++) {
 				if (this.defined[i][j]) {
 					result[index++] = this.getTransition(i, j, format);
-					System.out.print(print ? (result[index - 1] + "\n") : "");
+					System.out.print(print ? (result[index - 1] + '\n') : "");
 				}
 			}
 		}
@@ -893,12 +893,12 @@ public class TMS {
 	public String getDefaultTransition(int initialState, String initialChar, boolean format, boolean print)
 			throws IllegalArgumentException {
 		this.validateTransition(initialState, initialChar);
-		String transition = initialState + " " + initialChar + " " + initialState + " " + initialChar + " " + TMS.RIGHT;
+		String transition = initialState + ' ' + initialChar + ' ' + initialState + ' ' + initialChar + ' ' + TMS.RIGHT;
 		if (format) {
-			transition = "delta(" + initialState + "," + initialChar + ") = (" + initialState + "," + initialChar + ","
-					+ TMS.RIGHT + ")";
+			transition = "delta(" + initialState + ',' + initialChar + ") = (" + initialState + ',' + initialChar + ','
+					+ TMS.RIGHT + ')';
 		}
-		System.out.print(print ? (transition + "\n") : "");
+		System.out.print(print ? (transition + '\n') : "");
 		return transition;
 	}
 
@@ -940,10 +940,10 @@ public class TMS {
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += "(" + direction + ") isn't a valid direction(one of ";
+			this.cause += '(' + direction + ") isn't a valid direction(one of ";
 			StringBuilder s = new StringBuilder("");
-			for (int i = 0; i < this.validDirections.length; i++) {
-				s.append(this.validDirections[i] + (i != this.validDirections.length - 1 ? ", " : ""));
+			for (int i = 0; i < this.getNumValidDirections(); i++) {
+				s.append(this.validDirections[i] + (i != this.getNumValidDirections() - 1 ? ", " : ""));
 			}
 			this.cause += s.toString() + ").";
 			this.illegalArg();
@@ -951,8 +951,12 @@ public class TMS {
 		return direction;
 	}
 
+	public int getNumValidDirections() {
+		return this.validDirections.length;
+	}
+
 	public String[] getValidDirections() {
-		String[] result = new String[this.validDirections.length];
+		String[] result = new String[this.getNumValidDirections()];
 		System.arraycopy(this.validDirections, 0, result, 0, result.length);
 		return result;
 	}
@@ -1014,7 +1018,7 @@ public class TMS {
 		return this.validateStringsCount(this.getMinLength(), this.getMaxLength());
 	}
 
-	private int validateStringsCount(int minLength, int maxLength) {
+	private int validateStringsCount(int minLength, int maxLength) throws IllegalArgumentException {
 		if (this.getMaxStringCount() > TMS.MAX_STRINGS_COUNT) {
 			int max = Math.max(minLength, maxLength), start = this.isConstructing ? max : this.getInitialLength();
 			int s = this.getInputAlphabetSize(), estimateStringCount;
@@ -1106,11 +1110,11 @@ public class TMS {
 		StringBuilder result = new StringBuilder("");
 		String minChar = this.inputAlphabet[0];
 		if (format) {
-			result.append("\"" + minChar);
+			result.append('"' + minChar);
 			for (int i = 1; i < this.getMinLength(); i++) {
-				result.append(" " + minChar);
+				result.append(' ' + minChar);
 			}
-			result.append("\"");
+			result.append('"');
 		} else {
 			for (int i = 0; i < this.getMinLength(); i++) {
 				result.append(minChar);
@@ -1173,11 +1177,11 @@ public class TMS {
 		StringBuilder result = new StringBuilder("");
 		String maxChar = this.inputAlphabet[this.getMaxInputIndex()];
 		if (format) {
-			result.append("\"" + maxChar);
+			result.append('"' + maxChar);
 			for (int i = 1; i < this.getMaxLength(); i++) {
-				result.append(" " + maxChar);
+				result.append(' ' + maxChar);
 			}
-			result.append("\"");
+			result.append('"');
 		} else {
 			for (int i = 0; i < this.getMaxLength(); i++) {
 				result.append(maxChar);
@@ -1204,10 +1208,11 @@ public class TMS {
 	}
 
 	public String getLengthRange() {
-		return ("[" + this.getMinLength() + ", " + this.getMaxLength() + "]");
+		return ('[' + this.getMinLength() + ", " + this.getMaxLength() + ']');
 	}
 
-	private String setLengthRange(int minLength, int maxLength, boolean checkStringsCount) {
+	private String setLengthRange(int minLength, int maxLength, boolean checkStringsCount)
+			throws IllegalArgumentException {
 		// save field values in case of restoring
 		int savedMin = this.getMinLength(), savedMax = this.getMaxLength();
 		boolean savedCheckStringsCount = this.checkStringsCount, savedStrChange = this.strChange;
@@ -1363,7 +1368,7 @@ public class TMS {
 		return this.initialString;
 	}
 
-	private Object[] setInitialString(String initialString, boolean validate) {
+	private Object[] setInitialString(String initialString, boolean validate) throws IllegalArgumentException {
 		ArrayList<Integer> a = validate ? this.validateTestString(initialString) : this.toArray(initialString);
 		if (initialString.equals(this.getInitialString())) {
 			// impossible to happen when constructing since this.initialString is null
@@ -1373,7 +1378,7 @@ public class TMS {
 		if (!this.inLengthRange(a.size())) {
 			if (this.count) {
 				this.cause = "Given initial string(\"" + initialString + "\") has length " + a.size()
-						+ " which isn't in the range of " + this.getLengthRange() + ".";
+						+ " which isn't in the range of " + this.getLengthRange() + '.';
 				this.illegalArg();
 			} else {
 				this.setLengthRange(0, a.size(), false);
@@ -1395,7 +1400,8 @@ public class TMS {
 		return new ArrayList<Integer>(this.initialArray);
 	}
 
-	private Object[] setInitialArray(ArrayList<Integer> initialArray, boolean validate) {
+	private Object[] setInitialArray(ArrayList<Integer> initialArray, boolean validate)
+			throws IllegalArgumentException {
 		String s = null;
 		if (validate) {
 			s = this.validateTestString(initialArray);
@@ -1412,7 +1418,7 @@ public class TMS {
 		if (!this.inLengthRange(initialArray.size())) {
 			if (this.count) {
 				this.cause = "Given initial array represents \"" + s + "\" which has length " + initialArray.size()
-						+ " which isn't in the range of " + this.getLengthRange() + ".";
+						+ " which isn't in the range of " + this.getLengthRange() + '.';
 				this.illegalArg();
 			} else {
 				this.setLengthRange(0, initialArray.size(), false);
@@ -1473,11 +1479,11 @@ public class TMS {
 
 		StringBuilder output = new StringBuilder("");
 		if (format) {
-			output.append("\"" + this.inputAlphabet[testString.get(0)]);
+			output.append('"' + this.inputAlphabet[testString.get(0)]);
 			for (int i = 1; i < testString.size(); i++) {
-				output.append(" " + this.inputAlphabet[testString.get(i)]);
+				output.append(' ' + this.inputAlphabet[testString.get(i)]);
 			}
-			output.append("\"");
+			output.append('"');
 		} else {
 			for (int i = 0; i < testString.size(); i++) {
 				output.append(this.inputAlphabet[testString.get(i)]);
@@ -1555,13 +1561,13 @@ public class TMS {
 	}
 
 	public static String getMaxProcessTimeRange() {
-		return ("[" + TMS.MIN_PROCESS_TIME + ", " + TMS.MAX_PROCESS_TIME + "]");
+		return ('[' + TMS.MIN_PROCESS_TIME + ", " + TMS.MAX_PROCESS_TIME + ']');
 	}
 
 	public long validateMaxProcessTime(long maxProcessTime) throws IllegalArgumentException {
 		if (!TMS.isValidMaxProcessTime(maxProcessTime)) {
 			this.cause = "Given max process time(" + maxProcessTime + ") isn't in the range of "
-					+ TMS.getMaxProcessTimeRange() + ".";
+					+ TMS.getMaxProcessTimeRange() + '.';
 			this.illegalArg();
 		}
 		return maxProcessTime;
@@ -1893,7 +1899,7 @@ public class TMS {
 			String[] transitions = new String[numTransitions];
 			for (int i = 0; i < numTransitions; i++) {
 				if (!in.hasNextLine()) {
-					TMS.staticCause = "Given machine description didn't have line " + (i + 4) + ".";
+					TMS.staticCause = "Given machine description didn't have line " + (i + 4) + '.';
 					TMS.illegalArg(TMS.getStaticCause());
 				}
 				transitions[i] = in.nextLine();
@@ -2041,12 +2047,12 @@ public class TMS {
 			this.setIncludeComments(TMS.DEFAULT_INCLUDE_COMMENTS);
 			StringBuilder comments = new StringBuilder("");
 			while (in.hasNextLine()) {
-				comments.append(in.nextLine());
+				comments.append(in.nextLine() + '\n');
 				this.lineNumber++;
-				comments.append(in.hasNextLine() ? "\n" : "");
 			}
 			in.close(); // close upon success
-			this.offerComments(comments);
+			// trim last extra '\n' from comments
+			this.offerComments(comments.subSequence(0, comments.length() - 1));
 
 			this.isScanning = this.isConstructing = false;
 			this.cause = TMS.staticCause = null;
@@ -2104,9 +2110,10 @@ public class TMS {
 
 		for (int i = 0; i < numTransitions; i++) {
 			String line = transitions[i];
-			this.lineNumber += this.isScanning ? 1 : 0;
+			// increment lineNumber regardless since it's a private variable with no accessor
+			this.lineNumber++;
 			if (line == null) {
-				this.cause = "Given transitions array isn't valid since it contains null at index " + i + ".";
+				this.cause = "Given transitions array isn't valid since it contains null at index " + i + '.';
 				this.illegalArg();
 			}
 			Object[] result = this.validateTransition(line);
@@ -2151,7 +2158,7 @@ public class TMS {
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += "(" + transition + ") has the same initial state and initial character"
+			this.cause += '(' + transition + ") has the same initial state and initial character"
 					+ " as another transition defined before it.";
 			this.illegalArg();
 		}
@@ -2224,7 +2231,7 @@ public class TMS {
 		if (s.length != 5 || TMS.countSpaces(transition) != s.length - 1) {
 			this.cause = "Given transition(" + transition + ") isn't valid.";
 			if (this.isScanning) {
-				this.cause = "Line " + this.lineNumber + "(" + transition + ") isn't valid.";
+				this.cause = "Line " + this.lineNumber + '(' + transition + ") isn't valid.";
 			}
 			this.illegalArg();
 		}
@@ -2237,7 +2244,7 @@ public class TMS {
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += "(" + s[0] + ") isn't a valid integer.";
+			this.cause += '(' + s[0] + ") isn't a valid integer.";
 			this.illegalArg();
 		}
 
@@ -2249,7 +2256,7 @@ public class TMS {
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += "(" + s[2] + ") isn't a valid integer.";
+			this.cause += '(' + s[2] + ") isn't a valid integer.";
 			this.illegalArg();
 		}
 
@@ -2261,7 +2268,7 @@ public class TMS {
 			String direction) throws IllegalArgumentException {
 		int initialCharIndex = (int) (this.validateTransition(initialState, initialChar)[2]);
 		int finalCharIndex = this.validateTapeChar(finalChar, false);
-		String transition = initialState + " " + initialChar + " " + finalState + " " + finalChar + " " + direction;
+		String transition = initialState + ' ' + initialChar + ' ' + finalState + ' ' + finalChar + ' ' + direction;
 		Object[] result = { initialState, initialChar, this.validateFinalState(finalState), finalChar,
 				this.validateDirection(direction), initialCharIndex, finalCharIndex,
 				this.validateLeftend(initialCharIndex, finalCharIndex, direction, transition) };
@@ -2273,7 +2280,8 @@ public class TMS {
 		return result;
 	}
 
-	private String validateLeftend(int initialCharIndex, int finalCharIndex, String direction, String transition) {
+	private String validateLeftend(int initialCharIndex, int finalCharIndex, String direction, String transition)
+			throws IllegalArgumentException {
 		if (initialCharIndex == this.getLeftendIndex()) {
 			// check that the leftend marker is handled correctly
 			if (!direction.equals(TMS.RIGHT) || finalCharIndex != this.getLeftendIndex()) {
@@ -2281,7 +2289,7 @@ public class TMS {
 				if (this.isScanning) {
 					this.cause += " on line " + this.lineNumber;
 				}
-				this.cause += "(" + transition + ") isn't valid since it wrongfully handles the leftend.";
+				this.cause += '(' + transition + ") isn't valid since it wrongfully handles the leftend.";
 				this.illegalArg();
 			}
 		}
@@ -2452,7 +2460,7 @@ public class TMS {
 		}
 	}
 
-	private static boolean parseBoolean(String s, String name) {
+	private static boolean parseBoolean(String s, String name) throws IllegalArgumentException {
 		if (s == null) {
 			TMS.staticCause = "Given string is null.";
 			TMS.illegalArg(TMS.getStaticCause());
@@ -2467,7 +2475,7 @@ public class TMS {
 			}
 		}
 
-		TMS.staticCause = "Given " + name + "(" + s + ") doesn't represent a valid boolean.";
+		TMS.staticCause = "Given " + name + '(' + s + ") doesn't represent a valid boolean.";
 		TMS.illegalArg(TMS.getStaticCause());
 		return false;
 	}
@@ -2491,14 +2499,14 @@ public class TMS {
 					System.out.print("\nStarting to test ");
 				} else {
 					System.out.println(
-							"\nStarting to test strings of length in the range of " + this.getLengthRange() + ".");
+							"\nStarting to test strings of length in the range of " + this.getLengthRange() + '.');
 					System.out.print(
 							"Testing the first " + TMS.comma(this.getMaxStringCount()) + " strings starting from ");
 				}
 				message = this.toString(testString, true).toLowerCase();
-				System.out.println(message + ".");
+				System.out.println(message + '.');
 				if (this.getMaxStringCount() != 1 || !this.getTrace()) {
-					System.out.print("\n");
+					System.out.print('\n');
 				}
 			}
 		}
@@ -2519,16 +2527,16 @@ public class TMS {
 				message = this.toString(testString, true);
 				if (output == 1) {
 					message += " was accepted after " + this.comma() + this.getSteps()
-							+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + ".";
+							+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + '.';
 				} else if (output == 0) {
 					message += " was rejected after " + this.comma() + this.getSteps()
-							+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + ".";
+							+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + '.';
 				} else if (output == -1) {
 					message += " didn't terminate within " + this.comma() + this.getSteps()
-							+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + ".";
+							+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + '.';
 				} else { // output == -2
 					message += " didn't terminate within " + this.comma() + this.getSteps()
-							+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + ".";
+							+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + '.';
 				}
 				System.out.println(message);
 			}
@@ -2559,7 +2567,7 @@ public class TMS {
 
 	private int run(ArrayList<Integer> testString, int count, boolean print) {
 		if (print && this.getTrace() && count != 1) {
-			System.out.println();
+			System.out.print('\n');
 		}
 
 		int initialState = 0, initialHeadPos = 1;
@@ -2587,7 +2595,7 @@ public class TMS {
 		String s = this.toString(testString, true).toLowerCase();
 		if (print && this.getTrace()) {
 			if (this.count) {
-				System.out.println("Starting to test " + s + ".");
+				System.out.println("Starting to test " + s + '.');
 			}
 			this.printConfig(tape, state, headPos);
 		}
@@ -2612,10 +2620,6 @@ public class TMS {
 			}
 			state = this.nextState[state][oldCharIndex];
 
-			if (this.getTrace()) {
-				this.printConfig(tape, state, headPos);
-			}
-
 			// keep track of process time
 			if (this.getTimeLimit()) {
 				this.elapsedProcessTime += System.nanoTime() - beforeTime;
@@ -2623,10 +2627,14 @@ public class TMS {
 					this.elapsedProcessTime = TMS.nano2Milli(this.getElapsedProcessTime());
 					if (print && this.getTrace()) {
 						System.out.println("Turing machine ran for " + TMS.comma(--this.stepCount) + this.getSteps()
-								+ " on " + s + " without halting in " + this.formatTime() + ".");
+								+ " on " + s + " without halting in " + this.formatTime() + '.');
 					}
 					return -2;
 				}
+			}
+
+			if (this.getTrace()) {
+				this.printConfig(tape, state, headPos);
 			}
 		}
 		this.elapsedProcessTime = this.getTimeLimit() ? TMS.nano2Milli(this.getElapsedProcessTime()) : 0;
@@ -2634,19 +2642,19 @@ public class TMS {
 		if (state == this.getAcceptState()) {
 			if (print && this.getTrace()) {
 				System.out.println("Turing machine has accepted " + s + " after " + this.comma() + this.getSteps()
-						+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + ".");
+						+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + '.');
 			}
 			return 1;
 		} else if (state == this.getRejectState()) {
 			if (print && this.getTrace()) {
 				System.out.println("Turing machine has rejected " + s + " after " + this.comma() + this.getSteps()
-						+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + ".");
+						+ (this.getTimeLimit() ? " in " + this.formatTime() : "") + '.');
 			}
 			return 0;
 		} else {
 			if (print && this.getTrace()) {
 				System.out.println("Turing machine ran for " + TMS.comma(--this.stepCount) + this.getSteps() + " on "
-						+ s + " without halting" + (this.getTimeLimit() ? " in " + this.formatTime() : "") + ".");
+						+ s + " without halting" + (this.getTimeLimit() ? " in " + this.formatTime() : "") + '.');
 			}
 			return -1;
 		}
@@ -2724,7 +2732,7 @@ public class TMS {
 			this.cause = "Given turing machine tape is empty.";
 			this.illegalArg();
 		} else if (tape.get(0) != this.getLeftendIndex()) {
-			this.cause = "The first character on the given turing machine tape isn't " + TMS.LEFTEND + ".";
+			this.cause = "The first character on the given turing machine tape isn't " + TMS.LEFTEND + '.';
 			this.illegalArg();
 		}
 
@@ -2757,12 +2765,12 @@ public class TMS {
 	public void printMachine() {
 		System.out.print("\nTape alphabet:");
 		for (int i = 0; i < this.getTapeAlphabetSize(); i++) {
-			System.out.print(" " + this.tapeAlphabet[i]);
+			System.out.print(' ' + this.tapeAlphabet[i]);
 		}
 
 		System.out.print("\nInput alphabet:");
 		for (int i = 0; i < this.getInputAlphabetSize(); i++) {
-			System.out.print(" " + this.inputAlphabet[i]);
+			System.out.print(' ' + this.inputAlphabet[i]);
 		}
 
 		System.out.println("\n\nNumber of defined transitions: " + this.getNumDefinedTransitions());
@@ -2783,25 +2791,25 @@ public class TMS {
 
 		for (int i = 0; i < tape.size(); i++) {
 			if (headPos == i) {
-				System.out.print("q" + state + " ");
+				System.out.print('q' + state + ' ');
 			}
 			System.out.print(this.tapeAlphabet[tape.get(i)]);
 			if (i != tape.size() - 1) {
-				System.out.print(" ");
+				System.out.print(' ');
 			}
 		}
 
 		if (headPos == tape.size()) {
 			System.out.print(" q" + state);
 		}
-		System.out.println();
+		System.out.print('\n');
 
 		return tape;
 	}
 
 	public String printSimulationInfo() {
 		if (this.count) {
-			System.out.println();
+			System.out.print('\n');
 			if (this.getActualStringCount() == 1) {
 				System.out.println("There was only 1 string to test.");
 			} else {
@@ -2816,7 +2824,7 @@ public class TMS {
 					System.out.println("All of the tested strings were rejected.");
 				} else if (this.getInfiniteCount() == this.getActualStringCount()) {
 					System.out.println("None of the tested strings terminated within " + TMS.comma(this.getMaxSteps())
-							+ TMS.getSteps(this.getMaxSteps()) + ".");
+							+ TMS.getSteps(this.getMaxSteps()) + '.');
 				} else {
 					if (this.getAcceptCount() != 0) {
 						if (this.getAcceptCount() == 1) {
@@ -2837,10 +2845,10 @@ public class TMS {
 					if (this.getInfiniteCount() != 0) {
 						if (this.getInfiniteCount() == 1) {
 							System.out.println("1 string didn't terminate within " + TMS.comma(this.getMaxSteps())
-									+ TMS.getSteps(this.getMaxSteps()) + ".");
+									+ TMS.getSteps(this.getMaxSteps()) + '.');
 						} else {
 							System.out.println(TMS.comma(this.getInfiniteCount()) + " strings didn't terminate within "
-									+ TMS.comma(this.getMaxSteps()) + TMS.getSteps(this.getMaxSteps()) + ".");
+									+ TMS.comma(this.getMaxSteps()) + TMS.getSteps(this.getMaxSteps()) + '.');
 						}
 					}
 				}
@@ -2850,19 +2858,24 @@ public class TMS {
 		return this.getTime();
 	}
 
-	private static void illegalArg(String cause) {
-		throw new IllegalArgumentException("\n\n" + cause + "\n");
+	/*
+	 * throw an IllegalArgumentException with padding "\n" so that the exception message appears
+	 * separately on the System.err PrintStream.
+	 */
+	private static void illegalArg(String cause) throws IllegalArgumentException {
+		throw new IllegalArgumentException("\n\n" + cause + '\n');
 	}
 
-	private void illegalArg() {
+	private void illegalArg() throws IllegalArgumentException {
 		TMS.illegalArg(this.getCause());
 	}
 
+	// recursively add a ',' after every 3 characters of s starting from the right
 	public static String comma(String s) throws NullPointerException {
 		if (s.length() <= 3) {
 			return s;
 		}
-		return TMS.comma(s.substring(0, s.length() - 3)) + "," + s.substring(s.length() - 3);
+		return TMS.comma(s.substring(0, s.length() - 3)) + ',' + s.substring(s.length() - 3);
 	}
 
 	public static String comma(long l) {
@@ -2939,14 +2952,10 @@ public class TMS {
 		if (val == 1) {
 			s.append("1 " + unit);
 		} else if (val != 0) {
-			s.append(val + " " + unit);
-			if (!shortForm) {
-				s.append("s");
-			}
+			s.append(val + ' ' + unit);
+			s.append(!shortForm ? 's' : "");
 		}
-		if (s.length() != 0) {
-			s.append(" and ");
-		}
+		s.append(s.length() != 0 ? " and " : "");
 	}
 
 	private static void timeAppend(StringBuilder s, int val, String unit) {
@@ -3032,26 +3041,26 @@ public class TMS {
 
 		// first line
 		output.append(
-				this.getNumStates() + " " + this.getTapeAlphabetSize() + " " + this.getInputAlphabetSize() + "\n");
+				this.getNumStates() + ' ' + this.getTapeAlphabetSize() + ' ' + this.getInputAlphabetSize() + '\n');
 
 		// second line
 		for (int i = 0; i < this.getBlankIndex(); i++) {
 			output.append(this.tapeAlphabet[i]);
-			output.append(i != this.getBlankIndex() - 1 ? " " : "");
+			output.append(i != this.getBlankIndex() - 1 ? ' ' : "");
 		}
 
 		// third line
-		output.append("\n" + this.getNumDefinedTransitions() + "\n");
+		output.append('\n' + this.getNumDefinedTransitions() + '\n');
 
 		// transition lines
 		String[] definedTransitions = this.getDefinedTransitions();
 		for (int i = 0; i < definedTransitions.length; i++) {
-			output.append(definedTransitions[i] + "\n");
+			output.append(definedTransitions[i] + '\n');
 		}
 
 		// command line
 		if (this.getMaxStringCount() == 0) {
-			output.append("0");
+			output.append('0');
 		} else {
 			StringBuilder command = new StringBuilder("");
 			command.append(
@@ -3060,11 +3069,11 @@ public class TMS {
 			command.append((this.getMinLength() == TMS.DEFAULT_MIN_LENGTH ? TMS.DEFAULT : this.getMinLength()) + " ");
 			command.append((this.getMaxLength() == TMS.DEFAULT_MAX_LENGTH ? TMS.DEFAULT : this.getMaxLength()) + " ");
 			command.append((this.getMaxSteps() == TMS.DEFAULT_MAX_STEPS ? TMS.DEFAULT : this.getMaxSteps()) + " ");
-			command.append((this.getInitialLength() == 0 ? TMS.DEFAULT : this.getInitialString()) + " ");
+			command.append((this.getInitialLength() == 0 ? TMS.DEFAULT : this.getInitialString()) + ' ');
 			command.append(!this.getTrace() ? TMS.DEFAULT : TMS.TRUE_2);
 			if (this.getTimeLimit()) {
 				if (this.getMaxProcessTime() != TMS.DEFAULT_MAX_PROCESS_TIME) {
-					command.append(" " + this.getMaxProcessTime());
+					command.append(' ' + this.getMaxProcessTime());
 				} else {
 					command.append(" true");
 				}
@@ -3096,19 +3105,19 @@ public class TMS {
 				// [minLength, maxLength]: the initialString(s[4])
 				// can be removed since we can accomplish the same
 				// effect by having nothing there
-				command = s[0] + " " + s[1] + " " + s[2] + " " + s[3];
+				command = s[0] + ' ' + s[1] + ' ' + s[2] + ' ' + s[3];
 			} else if (s.length == 3 && this.getMinLength() == TMS.DEFAULT_MIN_LENGTH) {
 				// special case where the minLength is its default value
 				// and the command line is: |maxStringCount minLength maxLength|
 				// minLength(s[1]) can be removed since we can accomplish
 				// the same effect by just putting maxLength
-				command = s[0] + " " + s[2];
+				command = s[0] + ' ' + s[2];
 			} else if (s.length == 2) {
 				// special case where the maxLength has been removed but
 				// the minLength hasn't. To avoid having the constructor
 				// interpret the minLength as the maxLength, we have to
 				// append a TMS.DEFAULT
-				command += " " + TMS.DEFAULT;
+				command += ' ' + TMS.DEFAULT;
 			}
 		}
 		return command;
@@ -3159,8 +3168,8 @@ public class TMS {
 			return result;
 		} catch (IOException ex) {
 			this.overwrote = false;
-			this.cause = "Couldn't save the description of the current machine to a file with name " + fileName + ".";
-			throw new IOException("\n\n" + this.getCause() + "\n");
+			this.cause = "Couldn't save the description of the current machine to a file with name " + fileName + '.';
+			throw new IOException("\n\n" + this.getCause() + '\n');
 		}
 	}
 
