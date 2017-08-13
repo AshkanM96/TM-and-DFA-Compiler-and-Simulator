@@ -37,6 +37,19 @@ accepting and rejecting states. If no transition is given to describe δ(qi, a) 
 δ(qi, a) = (qi, a, R).
 
 Line T+1 is the command line which can be used to control some of the simulation parameters. The format is as follows:
-integer space integer space integer space long space string space boolean space boolean space long. The first integer describes the maximum number of strings to test. The second integer describes the minimum length of the strings to test. The third integer decribes the maximum length of the strings to test. The first long decribes the maximum number of steps to simulate before terminating. The string is the initial string to start the testing from. The first boolean describes the trace which will show every single simulated step. The second boolean describes whether or not to keep track of the amount of processing time and finally the second long (last entry) describes the maximum amount of time to test each string in milliseconds. The command line can have anywhere between 0 to 8 entries decribed by the above format. If it has only 2, the second integer will be processed as the maximum length and not the minimum length. If it has exactly 7, the last entry can be a long instead of a boolean describing the maximum process time. If it has less than the maximum number of entries (8), default values will be used for non-specified variables. If the string "default" or "DEFAULT" is entered as one of the entries, then the defualt value for that variable will be used.
+integer space integer space integer space long space string space boolean space boolean space long.
+The first integer describes the maximum number of strings to test.
+The second integer describes the minimum length of the strings to test.
+The third integer decribes the maximum length of the strings to test.
+The first long decribes the maximum number of steps to simulate before terminating.
+The string is the initial string to start the testing from.
+The first boolean describes the trace which will show every single simulated step.
+The second boolean describes whether or not to keep track of the amount of processing time and finally the second long (last entry) describes the maximum amount of time to test each string in milliseconds.
+
+The command line can have anywhere between 0 to 8 entries decribed by the above format.
+If it has only 2, the second integer will be processed as the maximum length and not the minimum length.
+If it has exactly 7, the last entry can be a long instead of a boolean describing the maximum process time.
+If it has less than the maximum number of entries (8), default values will be used for non-specified variables.
+If the string "default" or "DEFAULT" is entered as one of the entries, then the defualt value for that variable will be used.
 
 Anything after these T+1 lines will be ignored, so you can use them to write comments or explanations.
