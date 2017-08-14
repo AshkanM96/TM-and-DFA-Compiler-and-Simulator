@@ -16,6 +16,9 @@ public class TMSS {
 	 * when appropriate such as NullPointerException, IllegalStateException and etc.
 	 */
 
+	public static final char CHAR_DELIMITER = ' ';
+	public static final String STRING_DELIMITER = Character.toString(TMSS.CHAR_DELIMITER);
+
 	public static final int MIN_NUM_STATES = 3, MAX_NUM_STATES = 10000, MIN_INPUT_ALPHABET_SIZE = 1,
 			MAX_TAPE_ALPHABET_SIZE = 1000;
 	private int numStates, tapeAlphabetSize, inputAlphabetSize;
@@ -1812,8 +1815,8 @@ public class TMSS {
 			// process first line
 			String line = in.nextLine();
 			this.lineNumber++;
-			String[] s = line.split(" ");
-			if (s.length != TMSS.LINE_1_NUM_ENTRIES || TMSS.countSpaces(line) != s.length - 1) {
+			String[] s = line.split(TMSS.STRING_DELIMITER);
+			if (s.length != TMSS.LINE_1_NUM_ENTRIES || TMSS.countDelimiters(line) != s.length - 1) {
 				TMSS.staticCause = "Given first line(" + line + ") isn't valid.";
 				TMSS.illegalArg(TMSS.getStaticCause());
 			}
@@ -1855,8 +1858,9 @@ public class TMSS {
 			// process second line
 			line = in.nextLine();
 			this.lineNumber++;
-			s = line.split(" ");
-			if (s.length != tapeAlphabetSize - TMSS.NUM_SPECIAL_TAPE_CHARS || TMSS.countSpaces(line) != s.length - 1) {
+			s = line.split(TMSS.STRING_DELIMITER);
+			if (s.length != tapeAlphabetSize - TMSS.NUM_SPECIAL_TAPE_CHARS
+					|| TMSS.countDelimiters(line) != s.length - 1) {
 				TMSS.staticCause = "Given second line(" + line + ") isn't valid.";
 				TMSS.illegalArg(TMSS.getStaticCause());
 			}
@@ -1874,8 +1878,8 @@ public class TMSS {
 			// process third line
 			line = in.nextLine();
 			this.lineNumber++;
-			s = line.split(" ");
-			if (s.length != TMSS.LINE_3_NUM_ENTRIES || TMSS.countSpaces(line) != s.length - 1) {
+			s = line.split(TMSS.STRING_DELIMITER);
+			if (s.length != TMSS.LINE_3_NUM_ENTRIES || TMSS.countDelimiters(line) != s.length - 1) {
 				TMSS.staticCause = "Given third line(" + line + ") isn't valid.";
 				TMSS.illegalArg(TMSS.getStaticCause());
 			}
@@ -1917,8 +1921,8 @@ public class TMSS {
 				line = in.nextLine();
 				this.lineNumber++;
 				if (!line.isEmpty()) {
-					s = line.split(" ");
-					if (s.length > TMSS.COMMAND_LINE_MAX_NUM_ENTRIES || TMSS.countSpaces(line) != s.length - 1) {
+					s = line.split(TMSS.STRING_DELIMITER);
+					if (s.length > TMSS.COMMAND_LINE_MAX_NUM_ENTRIES || TMSS.countDelimiters(line) != s.length - 1) {
 						TMSS.staticCause = "Given command line(" + line + ") isn't valid.";
 						TMSS.illegalArg(TMSS.getStaticCause());
 					}
@@ -2223,8 +2227,8 @@ public class TMSS {
 			this.illegalArg();
 		}
 
-		String[] s = transition.split(" ");
-		if (s.length != 5 || TMSS.countSpaces(transition) != s.length - 1) {
+		String[] s = transition.split(TMSS.STRING_DELIMITER);
+		if (s.length != 5 || TMSS.countDelimiters(transition) != s.length - 1) {
 			this.cause = "Given transition(" + transition + ") isn't valid.";
 			if (this.isScanning) {
 				this.cause = "Line " + this.lineNumber + '(' + transition + ") isn't valid.";
@@ -2403,7 +2407,7 @@ public class TMSS {
 	}
 
 	@SuppressWarnings("null")
-	public static int countSpaces(String s) throws IllegalArgumentException {
+	public static int countDelimiters(String s) throws IllegalArgumentException {
 		if (s == null) {
 			TMSS.staticCause = "Given string is null.";
 			TMSS.illegalArg(TMSS.getStaticCause());
@@ -2411,7 +2415,7 @@ public class TMSS {
 
 		int count = 0;
 		for (int i = 0; i < s.length(); i++) {
-			count += s.charAt(i) == ' ' ? 1 : 0;
+			count += s.charAt(i) == TMSS.CHAR_DELIMITER ? 1 : 0;
 		}
 		return count;
 	}
@@ -3078,7 +3082,7 @@ public class TMSS {
 			command = index != 0 ? command.substring(0, index - 1) : "";
 		}
 		if (!command.isEmpty()) {
-			String[] s = command.split(" ");
+			String[] s = command.split(TMSS.STRING_DELIMITER);
 			if (s.length == 5 && this.getInitialLength() == this.getMinLength()
 					&& this.isMinTestString(this.initialArray)) {
 				// special case where the initialString is the minimum
