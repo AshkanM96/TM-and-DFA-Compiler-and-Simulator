@@ -16,6 +16,9 @@ public class DFA {
 	 * when appropriate such as NullPointerException, IllegalStateException and etc.
 	 */
 
+	public static final char CHAR_DELIMITER = ' ';
+	public static final String STRING_DELIMITER = Character.toString(DFA.CHAR_DELIMITER);
+
 	public static final int MIN_NUM_STATES = 1, MAX_NUM_STATES = 10000, MIN_INPUT_ALPHABET_SIZE = 1,
 			MAX_INPUT_ALPHABET_SIZE = 1000;
 	private int numStates, inputAlphabetSize;
@@ -1479,8 +1482,8 @@ public class DFA {
 			// process first line
 			String line = in.nextLine();
 			this.lineNumber++;
-			String[] s = line.split(" ");
-			if (s.length != DFA.LINE_1_NUM_ENTRIES || DFA.countSpaces(line) != s.length - 1) {
+			String[] s = line.split(DFA.STRING_DELIMITER);
+			if (s.length != DFA.LINE_1_NUM_ENTRIES || DFA.countDelimiters(line) != s.length - 1) {
 				DFA.staticCause = "Given first line(" + line + ") isn't valid.";
 				DFA.illegalArg(DFA.getStaticCause());
 			}
@@ -1536,8 +1539,8 @@ public class DFA {
 			// process second line
 			line = in.nextLine();
 			this.lineNumber++;
-			s = line.split(" ");
-			if (s.length != inputAlphabetSize || DFA.countSpaces(line) != s.length - 1) {
+			s = line.split(DFA.STRING_DELIMITER);
+			if (s.length != inputAlphabetSize || DFA.countDelimiters(line) != s.length - 1) {
 				DFA.staticCause = "Given second line(" + line + ") isn't valid.";
 				DFA.illegalArg(DFA.getStaticCause());
 			}
@@ -1562,8 +1565,8 @@ public class DFA {
 					DFA.illegalArg(DFA.getStaticCause());
 				}
 			} else {
-				s = line.split(" ");
-				if (s.length != numAcceptingStates || DFA.countSpaces(line) != s.length - 1) {
+				s = line.split(DFA.STRING_DELIMITER);
+				if (s.length != numAcceptingStates || DFA.countDelimiters(line) != s.length - 1) {
 					DFA.staticCause = "Given third line(" + line + ") isn't valid.";
 					DFA.illegalArg(DFA.getStaticCause());
 				}
@@ -1609,8 +1612,8 @@ public class DFA {
 				line = in.nextLine();
 				this.lineNumber++;
 				if (!line.isEmpty()) {
-					s = line.split(" ");
-					if (s.length > DFA.COMMAND_LINE_MAX_NUM_ENTRIES || DFA.countSpaces(line) != s.length - 1) {
+					s = line.split(DFA.STRING_DELIMITER);
+					if (s.length > DFA.COMMAND_LINE_MAX_NUM_ENTRIES || DFA.countDelimiters(line) != s.length - 1) {
 						DFA.staticCause = "Given command line(" + line + ") isn't valid.";
 						DFA.illegalArg(DFA.getStaticCause());
 					}
@@ -1845,8 +1848,8 @@ public class DFA {
 			this.illegalArg();
 		}
 
-		String[] s = transition.split(" ");
-		if (s.length != 3 || DFA.countSpaces(transition) != s.length - 1) {
+		String[] s = transition.split(DFA.STRING_DELIMITER);
+		if (s.length != 3 || DFA.countDelimiters(transition) != s.length - 1) {
 			this.cause = "Given transition(" + transition + ") isn't valid.";
 			if (this.isScanning) {
 				this.cause = "Line " + this.lineNumber + '(' + transition + ") isn't valid.";
@@ -2010,7 +2013,7 @@ public class DFA {
 	}
 
 	@SuppressWarnings("null")
-	public static int countSpaces(String s) throws IllegalArgumentException {
+	public static int countDelimiters(String s) throws IllegalArgumentException {
 		if (s == null) {
 			DFA.staticCause = "Given string is null.";
 			DFA.illegalArg(DFA.getStaticCause());
@@ -2018,7 +2021,7 @@ public class DFA {
 
 		int count = 0;
 		for (int i = 0; i < s.length(); i++) {
-			count += s.charAt(i) == ' ' ? 1 : 0;
+			count += s.charAt(i) == DFA.CHAR_DELIMITER ? 1 : 0;
 		}
 		return count;
 	}
@@ -2500,7 +2503,7 @@ public class DFA {
 			command = index != 0 ? command.substring(0, index - 1) : "";
 		}
 		if (!command.isEmpty()) {
-			String[] s = command.split(" ");
+			String[] s = command.split(DFA.STRING_DELIMITER);
 			if (s.length == 3 && this.getMinLength() == DFA.DEFAULT_MIN_LENGTH) {
 				// special case where the minLength is its default value
 				// and the command line is: |maxStringCount minLength maxLength|
