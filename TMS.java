@@ -16,8 +16,8 @@ public class TMS {
 	 * when appropriate such as NullPointerException, IllegalStateException and etc.
 	 */
 
-	public static final char CHAR_DELIMITER = ' ';
-	public static final String STRING_DELIMITER = Character.toString(TMS.CHAR_DELIMITER);
+	public static final char DELIMITER_CHAR = ' ';
+	public static final String DELIMITER_STRING = Character.toString(TMS.DELIMITER_CHAR);
 
 	public static final int MIN_NUM_STATES = 3, MAX_NUM_STATES = 10000, MIN_INPUT_ALPHABET_SIZE = 1,
 			MAX_TAPE_ALPHABET_SIZE = 1000;
@@ -63,7 +63,7 @@ public class TMS {
 	/*
 	 * maps testString to output:stepCount:elapsedProcessTime. always construct results with
 	 * initialCapacity of maxStringCount so that the need for resizing, rehashing, ... is greatly
-	 * decreased
+	 * reduced
 	 */
 	private HashMap<ArrayList<Integer>, String> results;
 
@@ -104,7 +104,7 @@ public class TMS {
 	/*
 	 * OR strChange with itself so that it's not set to false if it's already true. Put the more
 	 * complicated expression on the right side of the or(||) so that if strChange is already true, the
-	 * expression isn't evaluated due to compiler short-circuiting and some time is saved
+	 * expression isn't evaluated due to compiler short-circuiting so that time is saved
 	 */
 	private boolean strChange, comChange;
 	private String savedStr, savedCom;
@@ -1819,7 +1819,7 @@ public class TMS {
 			// process first line
 			String line = in.nextLine();
 			this.lineNumber++;
-			String[] s = line.split(TMS.STRING_DELIMITER);
+			String[] s = line.split(TMS.DELIMITER_STRING);
 			if (s.length != TMS.LINE_1_NUM_ENTRIES || TMS.countDelimiters(line) != s.length - 1) {
 				TMS.staticCause = "Given first line(" + line + ") isn't valid.";
 				TMS.illegalArg(TMS.getStaticCause());
@@ -1862,7 +1862,7 @@ public class TMS {
 			// process second line
 			line = in.nextLine();
 			this.lineNumber++;
-			s = line.split(TMS.STRING_DELIMITER);
+			s = line.split(TMS.DELIMITER_STRING);
 			if (s.length != tapeAlphabetSize - TMS.NUM_SPECIAL_TAPE_CHARS
 					|| TMS.countDelimiters(line) != s.length - 1) {
 				TMS.staticCause = "Given second line(" + line + ") isn't valid.";
@@ -1882,7 +1882,7 @@ public class TMS {
 			// process third line
 			line = in.nextLine();
 			this.lineNumber++;
-			s = line.split(TMS.STRING_DELIMITER);
+			s = line.split(TMS.DELIMITER_STRING);
 			if (s.length != TMS.LINE_3_NUM_ENTRIES || TMS.countDelimiters(line) != s.length - 1) {
 				TMS.staticCause = "Given third line(" + line + ") isn't valid.";
 				TMS.illegalArg(TMS.getStaticCause());
@@ -1925,7 +1925,7 @@ public class TMS {
 				line = in.nextLine();
 				this.lineNumber++;
 				if (!line.isEmpty()) {
-					s = line.split(TMS.STRING_DELIMITER);
+					s = line.split(TMS.DELIMITER_STRING);
 					if (s.length > TMS.COMMAND_LINE_MAX_NUM_ENTRIES || TMS.countDelimiters(line) != s.length - 1) {
 						TMS.staticCause = "Given command line(" + line + ") isn't valid.";
 						TMS.illegalArg(TMS.getStaticCause());
@@ -2231,7 +2231,7 @@ public class TMS {
 			this.illegalArg();
 		}
 
-		String[] s = transition.split(TMS.STRING_DELIMITER);
+		String[] s = transition.split(TMS.DELIMITER_STRING);
 		if (s.length != 5 || TMS.countDelimiters(transition) != s.length - 1) {
 			this.cause = "Given transition(" + transition + ") isn't valid.";
 			if (this.isScanning) {
@@ -2436,7 +2436,7 @@ public class TMS {
 
 		int count = 0;
 		for (int i = 0; i < s.length(); i++) {
-			count += s.charAt(i) == TMS.CHAR_DELIMITER ? 1 : 0;
+			count += s.charAt(i) == TMS.DELIMITER_CHAR ? 1 : 0;
 		}
 		return count;
 	}
@@ -3101,7 +3101,7 @@ public class TMS {
 			command = index != 0 ? command.substring(0, index - 1) : "";
 		}
 		if (!command.isEmpty()) {
-			String[] s = command.split(TMS.STRING_DELIMITER);
+			String[] s = command.split(TMS.DELIMITER_STRING);
 			if (s.length == 5 && this.getInitialLength() == this.getMinLength()
 					&& this.isMinTestString(this.initialArray)) {
 				// special case where the initialString is the minimum
