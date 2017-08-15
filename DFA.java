@@ -16,8 +16,8 @@ public class DFA {
 	 * when appropriate such as NullPointerException, IllegalStateException and etc.
 	 */
 
-	public static final char CHAR_DELIMITER = ' ';
-	public static final String STRING_DELIMITER = Character.toString(DFA.CHAR_DELIMITER);
+	public static final char DELIMITER_CHAR = ' ';
+	public static final String DELIMITER_STRING = Character.toString(DFA.DELIMITER_CHAR);
 
 	public static final int MIN_NUM_STATES = 1, MAX_NUM_STATES = 10000, MIN_INPUT_ALPHABET_SIZE = 1,
 			MAX_INPUT_ALPHABET_SIZE = 1000;
@@ -57,7 +57,7 @@ public class DFA {
 	private boolean count, checkStringsCount = true;
 	/*
 	 * maps testString to accept:stepCount. always construct results with initialCapacity of
-	 * maxStringCount so that the need for resizing, rehashing, ... is greatly decreased
+	 * maxStringCount so that the need for resizing, rehashing, ... is greatly reduced
 	 */
 	private HashMap<ArrayList<Integer>, String> results;
 
@@ -87,7 +87,7 @@ public class DFA {
 	/*
 	 * OR strChange with itself so that it's not set to false if it's already true. Put the more
 	 * complicated expression on the right side of the or(||) so that if strChange is already true, the
-	 * expression isn't evaluated due to compiler short-circuiting and some time is saved
+	 * expression isn't evaluated due to compiler short-circuiting so that time is saved
 	 */
 	private boolean strChange, comChange;
 	private String savedStr, savedCom;
@@ -1482,7 +1482,7 @@ public class DFA {
 			// process first line
 			String line = in.nextLine();
 			this.lineNumber++;
-			String[] s = line.split(DFA.STRING_DELIMITER);
+			String[] s = line.split(DFA.DELIMITER_STRING);
 			if (s.length != DFA.LINE_1_NUM_ENTRIES || DFA.countDelimiters(line) != s.length - 1) {
 				DFA.staticCause = "Given first line(" + line + ") isn't valid.";
 				DFA.illegalArg(DFA.getStaticCause());
@@ -1539,7 +1539,7 @@ public class DFA {
 			// process second line
 			line = in.nextLine();
 			this.lineNumber++;
-			s = line.split(DFA.STRING_DELIMITER);
+			s = line.split(DFA.DELIMITER_STRING);
 			if (s.length != inputAlphabetSize || DFA.countDelimiters(line) != s.length - 1) {
 				DFA.staticCause = "Given second line(" + line + ") isn't valid.";
 				DFA.illegalArg(DFA.getStaticCause());
@@ -1565,7 +1565,7 @@ public class DFA {
 					DFA.illegalArg(DFA.getStaticCause());
 				}
 			} else {
-				s = line.split(DFA.STRING_DELIMITER);
+				s = line.split(DFA.DELIMITER_STRING);
 				if (s.length != numAcceptingStates || DFA.countDelimiters(line) != s.length - 1) {
 					DFA.staticCause = "Given third line(" + line + ") isn't valid.";
 					DFA.illegalArg(DFA.getStaticCause());
@@ -1612,7 +1612,7 @@ public class DFA {
 				line = in.nextLine();
 				this.lineNumber++;
 				if (!line.isEmpty()) {
-					s = line.split(DFA.STRING_DELIMITER);
+					s = line.split(DFA.DELIMITER_STRING);
 					if (s.length > DFA.COMMAND_LINE_MAX_NUM_ENTRIES || DFA.countDelimiters(line) != s.length - 1) {
 						DFA.staticCause = "Given command line(" + line + ") isn't valid.";
 						DFA.illegalArg(DFA.getStaticCause());
@@ -1848,7 +1848,7 @@ public class DFA {
 			this.illegalArg();
 		}
 
-		String[] s = transition.split(DFA.STRING_DELIMITER);
+		String[] s = transition.split(DFA.DELIMITER_STRING);
 		if (s.length != 3 || DFA.countDelimiters(transition) != s.length - 1) {
 			this.cause = "Given transition(" + transition + ") isn't valid.";
 			if (this.isScanning) {
@@ -2021,7 +2021,7 @@ public class DFA {
 
 		int count = 0;
 		for (int i = 0; i < s.length(); i++) {
-			count += s.charAt(i) == DFA.CHAR_DELIMITER ? 1 : 0;
+			count += s.charAt(i) == DFA.DELIMITER_CHAR ? 1 : 0;
 		}
 		return count;
 	}
@@ -2503,7 +2503,7 @@ public class DFA {
 			command = index != 0 ? command.substring(0, index - 1) : "";
 		}
 		if (!command.isEmpty()) {
-			String[] s = command.split(DFA.STRING_DELIMITER);
+			String[] s = command.split(DFA.DELIMITER_STRING);
 			if (s.length == 3 && this.getMinLength() == DFA.DEFAULT_MIN_LENGTH) {
 				// special case where the minLength is its default value
 				// and the command line is: |maxStringCount minLength maxLength|
