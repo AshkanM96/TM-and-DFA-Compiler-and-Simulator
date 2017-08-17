@@ -1,4 +1,4 @@
-## TM-and-DFA-Compilers
+## TM-and-DFA-Compiler-and-Simulator
 
 This is just a repository of Turing-Machine and Deterministic-Finite-Automata Compilers/Simulators.
 
