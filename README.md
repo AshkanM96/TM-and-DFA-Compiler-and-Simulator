@@ -1,6 +1,6 @@
-## JavaProjects
+## TM-and-DFA-Compilers
 
-This is just a repository of some of the projects I have been invovled with, coded in Java.
+This is just a repository of Turing-Machine and Deterministic-Finite-Automata Compilers.
 
 *TMS.java* is a Turing-Machine compiler/simulator class that reads a description of a Turing-Machine specified by York-University-Turing-Machine-File-Format(YUTMFF for short). It can handle Turing-Machines with one-sided tapes(tape infinite on one end only as described in Introduction to the Theory of Computation by Michael Sipser http://math.mit.edu/~sipser/).
 
