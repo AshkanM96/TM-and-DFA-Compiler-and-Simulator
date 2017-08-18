@@ -2421,12 +2421,14 @@ public class TMSS {
 	}
 
 	public static String lower(String s) {
-		if (s == null || s.length() <= 1) {
-			return s;
+		if (s == null) {
+			return null;
 		}
 
 		String lower = s.toLowerCase();
-		if (s.substring(1).equals(lower.substring(1))) {
+		if (s.length() <= 1) {
+			return lower;
+		} else if (s.substring(1).equals(lower.substring(1))) {
 			return lower; // matches [A-Z][a-z]*
 		} else if (s.equals(s.toUpperCase())) {
 			return lower; // matches [A-Z]+
