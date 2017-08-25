@@ -2938,7 +2938,7 @@ public class TMS {
 		TMS.timeAppend(s, millis, MS[index], shortForm);
 		String output = s.toString();
 		output = output.replaceAll("( and )", "\t");
-		return output.trim().replaceAll("(\t)+", "and");
+		return output.trim().replaceAll("(\t)+", " and ");
 	}
 
 	public static String formatTime(long time) throws IllegalArgumentException {
