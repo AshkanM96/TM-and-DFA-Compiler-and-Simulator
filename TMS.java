@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
 public class TMS {
@@ -2909,11 +2911,12 @@ public class TMS {
 		}
 
 		int millis = (int) (time % TMS.MILLISECONDS_PER_SECOND);
-		Long seconds = (long) 0;
-		Integer minutes = 0, hours = 0, days = 0, weeks = 0, months = 0;
+		AtomicLong seconds = new AtomicLong();
+		AtomicInteger minutes = new AtomicInteger(), hours = new AtomicInteger(), days = new AtomicInteger(),
+				weeks = new AtomicInteger(), months = new AtomicInteger();
 
 		if (time >= TMS.MILLISECONDS_PER_SECOND) {
-			seconds = time / TMS.MILLISECONDS_PER_SECOND;
+			seconds.set(time / TMS.MILLISECONDS_PER_SECOND);
 			TMS.timeCalculate(seconds, TMS.SECONDS_PER_MONTH, months);
 			TMS.timeCalculate(seconds, TMS.SECONDS_PER_WEEK, weeks);
 			TMS.timeCalculate(seconds, TMS.SECONDS_PER_DAY, days);
@@ -2926,19 +2929,19 @@ public class TMS {
 		final int index = shortForm ? 1 : 0;
 
 		StringBuilder s = new StringBuilder("");
-		TMS.timeAppend(s, months, "month");
-		TMS.timeAppend(s, weeks, "week");
-		TMS.timeAppend(s, days, "day");
-		TMS.timeAppend(s, hours, H[index], shortForm);
-		TMS.timeAppend(s, minutes, M[index], shortForm);
-		TMS.timeAppend(s, TMS.safeCastLong2Int(seconds), S[index], shortForm);
+		TMS.timeAppend(s, months.get(), "month");
+		TMS.timeAppend(s, weeks.get(), "week");
+		TMS.timeAppend(s, days.get(), "day");
+		TMS.timeAppend(s, hours.get(), H[index], shortForm);
+		TMS.timeAppend(s, minutes.get(), M[index], shortForm);
+		TMS.timeAppend(s, TMS.safeCastLong2Int(seconds.get()), S[index], shortForm);
 		TMS.timeAppend(s, millis, MS[index], shortForm);
 		String output = s.toString();
-		output = output.replaceAll("(and)", " ");
-		return output.trim().replaceAll("( )+", "and");
+		output = output.replaceAll("( and )", "\t");
+		return output.trim().replaceAll("(\t)+", "and");
 	}
 
-	public static String formatTime(long time) {
+	public static String formatTime(long time) throws IllegalArgumentException {
 		return TMS.formatTime(time, false);
 	}
 
@@ -2946,11 +2949,11 @@ public class TMS {
 		return TMS.formatTime(this.getElapsedProcessTime(), true);
 	}
 
-	@SuppressWarnings("unused")
-	private static void timeCalculate(Long seconds, int bound, Integer remainder) {
-		if (seconds >= bound) {
-			remainder = (int) (seconds / bound);
-			seconds %= bound;
+	private static void timeCalculate(AtomicLong seconds, int bound, AtomicInteger remainder) {
+		long s = seconds.get();
+		if (s >= bound) {
+			remainder.set((int) (s / bound));
+			seconds.set(s % bound);
 		}
 	}
 
@@ -2958,7 +2961,7 @@ public class TMS {
 		if (val == 1) {
 			s.append("1 " + unit);
 		} else if (val != 0) {
-			s.append(val + ' ' + unit);
+			s.append(val + " " + unit);
 			s.append(!shortForm ? 's' : "");
 		}
 		s.append(s.length() != 0 ? " and " : "");
