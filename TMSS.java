@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
 public class TMSS {
@@ -2882,7 +2884,7 @@ public class TMSS {
 		return TMSS.getSteps(this.getStepCount());
 	}
 
-	public static String formatTime(long time, boolean shortForm) {
+	public static String formatTime(long time, boolean shortForm) throws IllegalArgumentException {
 		if (time < 0) {
 			TMSS.staticCause = "Given value of time(" + time + ") is negative.";
 			TMSS.illegalArg(TMSS.getStaticCause());
@@ -2891,11 +2893,12 @@ public class TMSS {
 		}
 
 		int millis = (int) (time % TMSS.MILLISECONDS_PER_SECOND);
-		Long seconds = (long) 0;
-		Integer minutes = 0, hours = 0, days = 0, weeks = 0, months = 0;
+		AtomicLong seconds = new AtomicLong();
+		AtomicInteger minutes = new AtomicInteger(), hours = new AtomicInteger(), days = new AtomicInteger(),
+				weeks = new AtomicInteger(), months = new AtomicInteger();
 
 		if (time >= TMSS.MILLISECONDS_PER_SECOND) {
-			seconds = time / TMSS.MILLISECONDS_PER_SECOND;
+			seconds.set(time / TMSS.MILLISECONDS_PER_SECOND);
 			TMSS.timeCalculate(seconds, TMSS.SECONDS_PER_MONTH, months);
 			TMSS.timeCalculate(seconds, TMSS.SECONDS_PER_WEEK, weeks);
 			TMSS.timeCalculate(seconds, TMSS.SECONDS_PER_DAY, days);
@@ -2908,19 +2911,19 @@ public class TMSS {
 		final int index = shortForm ? 1 : 0;
 
 		StringBuilder s = new StringBuilder("");
-		TMSS.timeAppend(s, months, "month");
-		TMSS.timeAppend(s, weeks, "week");
-		TMSS.timeAppend(s, days, "day");
-		TMSS.timeAppend(s, hours, H[index], shortForm);
-		TMSS.timeAppend(s, minutes, M[index], shortForm);
-		TMSS.timeAppend(s, TMSS.safeCastLong2Int(seconds), S[index], shortForm);
+		TMSS.timeAppend(s, months.get(), "month");
+		TMSS.timeAppend(s, weeks.get(), "week");
+		TMSS.timeAppend(s, days.get(), "day");
+		TMSS.timeAppend(s, hours.get(), H[index], shortForm);
+		TMSS.timeAppend(s, minutes.get(), M[index], shortForm);
+		TMSS.timeAppend(s, TMSS.safeCastLong2Int(seconds.get()), S[index], shortForm);
 		TMSS.timeAppend(s, millis, MS[index], shortForm);
 		String output = s.toString();
-		output = output.replaceAll("(and)", " ");
-		return output.trim().replaceAll("( )+", "and");
+		output = output.replaceAll("( and )", "\t");
+		return output.trim().replaceAll("(\t)+", "and");
 	}
 
-	public static String formatTime(long time) {
+	public static String formatTime(long time) throws IllegalArgumentException {
 		return TMSS.formatTime(time, false);
 	}
 
@@ -2928,11 +2931,11 @@ public class TMSS {
 		return TMSS.formatTime(this.getElapsedProcessTime(), true);
 	}
 
-	@SuppressWarnings("unused")
-	private static void timeCalculate(Long seconds, int bound, Integer remainder) {
-		if (seconds >= bound) {
-			remainder = (int) (seconds / bound);
-			seconds %= bound;
+	private static void timeCalculate(AtomicLong seconds, int bound, AtomicInteger remainder) {
+		long s = seconds.get();
+		if (s >= bound) {
+			remainder.set((int) (s / bound));
+			seconds.set(s % bound);
 		}
 	}
 
@@ -2940,7 +2943,7 @@ public class TMSS {
 		if (val == 1) {
 			s.append("1 " + unit);
 		} else if (val != 0) {
-			s.append(val + ' ' + unit);
+			s.append(val + " " + unit);
 			s.append(!shortForm ? 's' : "");
 		}
 		s.append(s.length() != 0 ? " and " : "");
