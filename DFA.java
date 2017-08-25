@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
 public class DFA {
@@ -2329,7 +2331,7 @@ public class DFA {
 		return DFA.comma(Integer.toString(i));
 	}
 
-	public static String formatTime(long time) {
+	public static String formatTime(long time) throws IllegalArgumentException {
 		if (time < 0) {
 			DFA.staticCause = "Given value of time(" + time + ") is negative.";
 			DFA.illegalArg(DFA.getStaticCause());
@@ -2338,32 +2340,32 @@ public class DFA {
 		}
 
 		int millis = (int) (time % DFA.MILLISECONDS_PER_SECOND);
-		Long seconds = (long) 0;
-		Integer minutes = 0, hours = 0, days = 0;
+		AtomicLong seconds = new AtomicLong();
+		AtomicInteger minutes = new AtomicInteger(), hours = new AtomicInteger(), days = new AtomicInteger();
 
 		if (time >= DFA.MILLISECONDS_PER_SECOND) {
-			seconds = time / DFA.MILLISECONDS_PER_SECOND;
+			seconds.set(time / DFA.MILLISECONDS_PER_SECOND);
 			DFA.timeCalculate(seconds, DFA.SECONDS_PER_DAY, days);
 			DFA.timeCalculate(seconds, DFA.SECONDS_PER_HOUR, hours);
 			DFA.timeCalculate(seconds, DFA.SECONDS_PER_MINUTE, minutes);
 		}
 
 		StringBuilder s = new StringBuilder("");
-		DFA.timeAppend(s, days, "day");
-		DFA.timeAppend(s, hours, "hour");
-		DFA.timeAppend(s, minutes, "minute");
-		DFA.timeAppend(s, DFA.safeCastLong2Int(seconds), "second");
+		DFA.timeAppend(s, days.get(), "day");
+		DFA.timeAppend(s, hours.get(), "hour");
+		DFA.timeAppend(s, minutes.get(), "minute");
+		DFA.timeAppend(s, DFA.safeCastLong2Int(seconds.get()), "second");
 		DFA.timeAppend(s, millis, "millisecond");
 		String output = s.toString();
-		output = output.replaceAll("(and)", " ");
-		return output.trim().replaceAll("( )+", "and");
+		output = output.replaceAll("( and )", "\t");
+		return output.trim().replaceAll("(\t)+", "and");
 	}
 
-	@SuppressWarnings("unused")
-	private static void timeCalculate(Long seconds, int bound, Integer remainder) {
-		if (seconds >= bound) {
-			remainder = (int) (seconds / bound);
-			seconds %= bound;
+	private static void timeCalculate(AtomicLong seconds, int bound, AtomicInteger remainder) {
+		long s = seconds.get();
+		if (s >= bound) {
+			remainder.set((int) (s / bound));
+			seconds.set(s % bound);
 		}
 	}
 
@@ -2371,7 +2373,7 @@ public class DFA {
 		if (val == 1) {
 			s.append("1 " + unit);
 		} else if (val != 0) {
-			s.append(val + ' ' + unit + 's');
+			s.append(val + " " + unit + 's');
 		}
 		s.append(s.length() != 0 ? " and " : "");
 	}
