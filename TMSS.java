@@ -2051,8 +2051,8 @@ public class TMSS {
 				this.lineNumber++;
 			}
 			in.close(); // close upon success
-			// trim last extra '\n' from comments
-			this.offerComments(comments.subSequence(0, comments.length() - 1));
+			// trim last extra '\n' from comments if it exists
+			this.offerComments(comments.length() == 0 ? comments : comments.subSequence(0, comments.length() - 1));
 
 			this.isScanning = this.isConstructing = false;
 			this.cause = TMSS.staticCause = null;
