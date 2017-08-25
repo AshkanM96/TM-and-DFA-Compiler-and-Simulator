@@ -190,13 +190,13 @@ public class DFA {
 	}
 
 	public static String getNumStatesRange() {
-		return ('[' + DFA.MIN_NUM_STATES + ", " + DFA.MAX_NUM_STATES + ']');
+		return ("[" + DFA.MIN_NUM_STATES + ", " + DFA.MAX_NUM_STATES + "]");
 	}
 
 	public int validateNumStates(int numStates) throws IllegalArgumentException {
 		if (!DFA.isValidNumStates(numStates)) {
 			this.cause = "Given number of states(" + numStates + ") isn't in the range of " + DFA.getNumStatesRange()
-					+ '.';
+					+ ".";
 			this.illegalArg();
 		}
 		return numStates;
@@ -211,7 +211,7 @@ public class DFA {
 	}
 
 	public String getStateRange() {
-		return ("[0, " + this.getMaxState() + ']');
+		return ("[0, " + this.getMaxState() + "]");
 	}
 
 	public int validateState(int state, boolean isInitial) throws IllegalArgumentException {
@@ -220,7 +220,7 @@ public class DFA {
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += '(' + state + ") isn't in the range of " + this.getStateRange() + '.';
+			this.cause += "(" + state + ") isn't in the range of " + this.getStateRange() + ".";
 			this.illegalArg();
 		}
 		return state;
@@ -243,13 +243,13 @@ public class DFA {
 	}
 
 	public String getInputCharIndexRange() {
-		return ("[0, " + this.getMaxInputIndex() + ']');
+		return ("[0, " + this.getMaxInputIndex() + "]");
 	}
 
 	public int validateInputCharIndex(int index) throws IllegalArgumentException {
 		if (!this.isValidInputCharIndex(index)) {
 			this.cause = "Given input character index(" + index + ") isn't in the range of "
-					+ this.getInputCharIndexRange() + '.';
+					+ this.getInputCharIndexRange() + ".";
 			this.illegalArg();
 		}
 		return index;
@@ -274,7 +274,7 @@ public class DFA {
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += '(' + s + ") isn't a valid input character.";
+			this.cause += "(" + s + ") isn't a valid input character.";
 			this.illegalArg();
 		}
 		return index;
@@ -301,7 +301,7 @@ public class DFA {
 
 	public boolean getAccepting(int state) throws IllegalArgumentException {
 		if (!this.isValidState(state)) {
-			this.cause = "Given state(" + state + ") isn't in the range of " + this.getStateRange() + '.';
+			this.cause = "Given state(" + state + ") isn't in the range of " + this.getStateRange() + ".";
 			this.illegalArg();
 		}
 		return this.accepting[state];
@@ -315,7 +315,7 @@ public class DFA {
 
 	public int setAcceptingState(int state, boolean accepting) throws IllegalArgumentException {
 		if (!this.isValidState(state)) {
-			this.cause = "Given state(" + state + ") isn't in the range of " + this.getStateRange() + '.';
+			this.cause = "Given state(" + state + ") isn't in the range of " + this.getStateRange() + ".";
 			this.illegalArg();
 		} else if (this.accepting[state] == accepting) {
 			return state;
@@ -349,7 +349,7 @@ public class DFA {
 			int acceptState = acceptingStates[i];
 			if (!this.isValidState(acceptState)) {
 				this.cause = "Given accept state index(" + acceptState + ") isn't in the range of "
-						+ this.getStateRange() + '.';
+						+ this.getStateRange() + ".";
 				this.illegalArg();
 			} else if (accepting[acceptState]) {
 				this.cause = "State " + acceptState + " has been defined to be an accept state more than once.";
@@ -365,13 +365,13 @@ public class DFA {
 	}
 
 	public String getNumAcceptingStatesRange() {
-		return ("[0, " + this.getNumStates() + ']');
+		return ("[0, " + this.getNumStates() + "]");
 	}
 
 	public int validateNumAcceptingStates(int numAcceptingStates) throws IllegalArgumentException {
 		if (!this.isValidNumAcceptingStates(numAcceptingStates)) {
 			this.cause = "Given number of accepting states(" + numAcceptingStates + ") isn't in the range of "
-					+ this.getNumAcceptingStatesRange() + '.';
+					+ this.getNumAcceptingStatesRange() + ".";
 			this.illegalArg();
 		}
 		return numAcceptingStates;
@@ -433,16 +433,16 @@ public class DFA {
 		String inputChar;
 		for (int i = 0; i < inputAlphabetSize; i++) {
 			if ((inputChar = inputAlphabet[i]) == null) {
-				this.cause = "Given input alphabet isn't valid since it contains null at index " + i + '.';
+				this.cause = "Given input alphabet isn't valid since it contains null at index " + i + ".";
 				this.illegalArg();
 			} else if (inputChar.isEmpty()) {
-				this.cause = '"' + inputChar + "\" isn't valid since it's the empty string.";
+				this.cause = "\"" + inputChar + "\" isn't valid since it's the empty string.";
 				this.illegalArg();
 			} else if (DFA.WHITESPACE_PATTERN.matcher(inputChar).find()) {
-				this.cause = '"' + inputChar + "\" isn't valid since it contains whitespace.";
+				this.cause = "\"" + inputChar + "\" isn't valid since it contains whitespace.";
 				this.illegalArg();
 			} else if (inputIndex.containsKey(inputChar)) {
-				this.cause = '"' + inputChar + "\" has been defined more than once.";
+				this.cause = "\"" + inputChar + "\" has been defined more than once.";
 				this.illegalArg();
 			}
 			inputIndex.put(inputChar, i);
@@ -458,13 +458,13 @@ public class DFA {
 	}
 
 	public static String getInputAlphabetSizeRange() {
-		return ('[' + DFA.MIN_INPUT_ALPHABET_SIZE + ", " + DFA.MAX_INPUT_ALPHABET_SIZE + ']');
+		return ("[" + DFA.MIN_INPUT_ALPHABET_SIZE + ", " + DFA.MAX_INPUT_ALPHABET_SIZE + "]");
 	}
 
 	public int validateInputAlphabetSize(int inputAlphabetSize) throws IllegalArgumentException {
 		if (!DFA.isValidInputAlphabetSize(inputAlphabetSize)) {
 			this.cause = "Given input alphabet size(" + inputAlphabetSize + ") isn't in the range of "
-					+ DFA.getInputAlphabetSizeRange() + '.';
+					+ DFA.getInputAlphabetSizeRange() + ".";
 			this.illegalArg();
 		}
 		return inputAlphabetSize;
@@ -560,10 +560,10 @@ public class DFA {
 
 	private String getTransition(int initialState, int readCharIndex, boolean format) {
 		if (format) {
-			return ("delta(" + initialState + ',' + this.inputAlphabet[readCharIndex] + ") = "
+			return ("delta(" + initialState + "," + this.inputAlphabet[readCharIndex] + ") = "
 					+ this.nextState[initialState][readCharIndex]);
 		}
-		return (initialState + ' ' + this.inputAlphabet[readCharIndex] + ' '
+		return (initialState + " " + this.inputAlphabet[readCharIndex] + " "
 				+ this.nextState[initialState][readCharIndex]);
 	}
 
@@ -747,9 +747,9 @@ public class DFA {
 	public String getDefaultTransition(int initialState, String readChar, boolean format, boolean print)
 			throws IllegalArgumentException {
 		this.validateTransition(initialState, readChar);
-		String transition = initialState + ' ' + readChar + ' ' + initialState;
+		String transition = initialState + " " + readChar + " " + initialState;
 		if (format) {
-			transition = "delta(" + initialState + ',' + readChar + ") = " + initialState;
+			transition = "delta(" + initialState + "," + readChar + ") = " + initialState;
 		}
 		System.out.print(print ? (transition + '\n') : "");
 		return transition;
@@ -897,11 +897,11 @@ public class DFA {
 		StringBuilder result = new StringBuilder("");
 		String minChar = this.inputAlphabet[0];
 		if (format) {
-			result.append('"' + minChar);
+			result.append("\"" + minChar);
 			for (int i = 1; i < this.getMinLength(); i++) {
-				result.append(' ' + minChar);
+				result.append(" " + minChar);
 			}
-			result.append('"');
+			result.append("\"");
 		} else {
 			for (int i = 0; i < this.getMinLength(); i++) {
 				result.append(minChar);
@@ -964,11 +964,11 @@ public class DFA {
 		StringBuilder result = new StringBuilder("");
 		String maxChar = this.inputAlphabet[this.getMaxInputIndex()];
 		if (format) {
-			result.append('"' + maxChar);
+			result.append("\"" + maxChar);
 			for (int i = 1; i < this.getMaxLength(); i++) {
-				result.append(' ' + maxChar);
+				result.append(" " + maxChar);
 			}
-			result.append('"');
+			result.append("\"");
 		} else {
 			for (int i = 0; i < this.getMaxLength(); i++) {
 				result.append(maxChar);
@@ -995,7 +995,7 @@ public class DFA {
 	}
 
 	public String getLengthRange() {
-		return ('[' + this.getMinLength() + ", " + this.getMaxLength() + ']');
+		return ("[" + this.getMinLength() + ", " + this.getMaxLength() + "]");
 	}
 
 	private String setLengthRange(int minLength, int maxLength, boolean checkStringsCount)
@@ -1138,7 +1138,7 @@ public class DFA {
 		if (!this.inLengthRange(a.size())) {
 			if (this.count) {
 				this.cause = "Given initial string(\"" + initialString + "\") has length " + a.size()
-						+ " which isn't in the range of " + this.getLengthRange() + '.';
+						+ " which isn't in the range of " + this.getLengthRange() + ".";
 				this.illegalArg();
 			} else {
 				this.setLengthRange(0, a.size(), false);
@@ -1178,7 +1178,7 @@ public class DFA {
 		if (!this.inLengthRange(initialArray.size())) {
 			if (this.count) {
 				this.cause = "Given initial array represents \"" + s + "\" which has length " + initialArray.size()
-						+ " which isn't in the range of " + this.getLengthRange() + '.';
+						+ " which isn't in the range of " + this.getLengthRange() + ".";
 				this.illegalArg();
 			} else {
 				this.setLengthRange(0, initialArray.size(), false);
@@ -1239,11 +1239,11 @@ public class DFA {
 
 		StringBuilder output = new StringBuilder("");
 		if (format) {
-			output.append('"' + this.inputAlphabet[testString.get(0)]);
+			output.append("\"" + this.inputAlphabet[testString.get(0)]);
 			for (int i = 1; i < testString.size(); i++) {
-				output.append(' ' + this.inputAlphabet[testString.get(i)]);
+				output.append(" " + this.inputAlphabet[testString.get(i)]);
 			}
-			output.append('"');
+			output.append("\"");
 		} else {
 			for (int i = 0; i < testString.size(); i++) {
 				output.append(this.inputAlphabet[testString.get(i)]);
@@ -1594,7 +1594,7 @@ public class DFA {
 			String[] transitions = new String[numTransitions];
 			for (int i = 0; i < numTransitions; i++) {
 				if (!in.hasNextLine()) {
-					DFA.staticCause = "Given machine description didn't have line " + (i + 4) + '.';
+					DFA.staticCause = "Given machine description didn't have line " + (i + 4) + ".";
 					DFA.illegalArg(DFA.getStaticCause());
 				}
 				transitions[i] = in.nextLine();
@@ -1752,7 +1752,7 @@ public class DFA {
 			// increment lineNumber regardless since it's a private variable with no accessor
 			this.lineNumber++;
 			if (line == null) {
-				this.cause = "Given transitions array isn't valid since it contains null at index " + i + '.';
+				this.cause = "Given transitions array isn't valid since it contains null at index " + i + ".";
 				this.illegalArg();
 			}
 			Object[] result = this.validateTransition(line);
@@ -1789,13 +1789,13 @@ public class DFA {
 	public String putTransition(int initialState, String readChar, int finalState, boolean replace)
 			throws IllegalArgumentException {
 		int readCharIndex = (int) (this.validateTransition(initialState, readChar, finalState)[3]);
-		String transition = initialState + ' ' + readChar + ' ' + finalState;
+		String transition = initialState + " " + readChar + " " + finalState;
 		if (!replace && this.defined[initialState][readCharIndex]) {
 			this.cause = "Given transition";
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += '(' + transition + ") has the same initial state and input character"
+			this.cause += "(" + transition + ") has the same initial state and input character"
 					+ " as another transition defined before it.";
 			this.illegalArg();
 		}
@@ -1854,7 +1854,7 @@ public class DFA {
 		if (s.length != 3 || DFA.countDelimiters(transition) != s.length - 1) {
 			this.cause = "Given transition(" + transition + ") isn't valid.";
 			if (this.isScanning) {
-				this.cause = "Line " + this.lineNumber + '(' + transition + ") isn't valid.";
+				this.cause = "Line " + this.lineNumber + "(" + transition + ") isn't valid.";
 			}
 			this.illegalArg();
 		}
@@ -1867,7 +1867,7 @@ public class DFA {
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += '(' + s[0] + ") isn't a valid integer.";
+			this.cause += "(" + s[0] + ") isn't a valid integer.";
 			this.illegalArg();
 		}
 
@@ -1879,7 +1879,7 @@ public class DFA {
 			if (this.isScanning) {
 				this.cause += " on line " + this.lineNumber;
 			}
-			this.cause += '(' + s[2] + ") isn't a valid integer.";
+			this.cause += "(" + s[2] + ") isn't a valid integer.";
 			this.illegalArg();
 		}
 
@@ -2088,12 +2088,12 @@ public class DFA {
 					System.out.print("\nStarting to test ");
 				} else {
 					System.out.println(
-							"\nStarting to test strings of length in the range of " + this.getLengthRange() + '.');
+							"\nStarting to test strings of length in the range of " + this.getLengthRange() + ".");
 					System.out.print(
 							"Testing the first " + DFA.comma(this.getMaxStringCount()) + " strings starting from ");
 				}
 				message = this.toString(testString, true).toLowerCase();
-				System.out.println(message + '.' + (this.getMaxStringCount() != 1 ? '\n' : ""));
+				System.out.println(message + "." + (this.getMaxStringCount() != 1 ? '\n' : ""));
 			}
 		}
 
@@ -2248,7 +2248,7 @@ public class DFA {
 	public void printMachine() {
 		System.out.print("\nInput alphabet:");
 		for (int i = 0; i < this.getInputAlphabetSize(); i++) {
-			System.out.print(' ' + this.inputAlphabet[i]);
+			System.out.print(" " + this.inputAlphabet[i]);
 		}
 
 		if (this.getNumAcceptingStates() == 0) {
@@ -2259,7 +2259,7 @@ public class DFA {
 			System.out.print("\nAccepting states:");
 			for (int i = 0; i < this.getNumStates(); i++) {
 				if (this.accepting[i]) {
-					System.out.print(' ' + i);
+					System.out.print(" " + i);
 				}
 			}
 		}
@@ -2319,12 +2319,12 @@ public class DFA {
 		DFA.illegalArg(this.getCause());
 	}
 
-	// recursively add a ',' after every 3 characters of s starting from the right
+	// recursively add a "," after every 3 characters of s starting from the right
 	public static String comma(String s) throws NullPointerException {
 		if (s.length() <= 3) {
 			return s;
 		}
-		return DFA.comma(s.substring(0, s.length() - 3)) + ',' + s.substring(s.length() - 3);
+		return DFA.comma(s.substring(0, s.length() - 3)) + "," + s.substring(s.length() - 3);
 	}
 
 	public static String comma(int i) {
@@ -2373,7 +2373,7 @@ public class DFA {
 		if (val == 1) {
 			s.append("1 " + unit);
 		} else if (val != 0) {
-			s.append(val + " " + unit + 's');
+			s.append(val + " " + unit + "s");
 		}
 		s.append(s.length() != 0 ? " and " : "");
 	}
@@ -2455,12 +2455,12 @@ public class DFA {
 		StringBuilder output = new StringBuilder("");
 
 		// first line
-		output.append(this.getNumStates() + ' ' + this.getInputAlphabetSize() + ' ' + this.getNumAcceptingStates() + ' '
+		output.append(this.getNumStates() + " " + this.getInputAlphabetSize() + " " + this.getNumAcceptingStates() + " "
 				+ this.getNumDefinedTransitions() + '\n');
 
 		// second line
 		for (int i = 0; i < this.getInputAlphabetSize(); i++) {
-			output.append(this.inputAlphabet[i] + (i != this.getInputAlphabetSize() - 1 ? ' ' : ""));
+			output.append(this.inputAlphabet[i] + (i != this.getInputAlphabetSize() - 1 ? " " : ""));
 		}
 		output.append('\n');
 
@@ -2482,7 +2482,7 @@ public class DFA {
 		// command line
 		StringBuilder command = new StringBuilder("");
 		if (this.getMaxStringCount() == 0) {
-			output.append('0');
+			output.append("0");
 		} else {
 			command.append(
 					(this.getMaxStringCount() == DFA.DEFAULT_MAX_STRING_COUNT ? DFA.DEFAULT : this.getMaxStringCount())
@@ -2513,13 +2513,13 @@ public class DFA {
 				// and the command line is: |maxStringCount minLength maxLength|
 				// minLength(s[1]) can be removed since we can accomplish
 				// the same effect by just putting maxLength
-				command = s[0] + ' ' + s[2];
+				command = s[0] + " " + s[2];
 			} else if (s.length == 2) {
 				// special case where the maxLength has been removed but
 				// the minLength hasn't. To avoid having the constructor
 				// interpret the minLength as the maxLength, we have to
 				// append a DFA.DEFAULT
-				command += ' ' + DFA.DEFAULT;
+				command += " " + DFA.DEFAULT;
 			}
 		}
 		return command;
@@ -2570,7 +2570,7 @@ public class DFA {
 			return result;
 		} catch (IOException ex) {
 			this.overwrote = false;
-			this.cause = "Couldn't save the description of the current machine to a file with name " + fileName + '.';
+			this.cause = "Couldn't save the description of the current machine to a file with name " + fileName + ".";
 			throw new IOException("\n\n" + this.getCause() + '\n');
 		}
 	}
