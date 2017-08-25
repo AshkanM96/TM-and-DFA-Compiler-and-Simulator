@@ -2358,7 +2358,7 @@ public class DFA {
 		DFA.timeAppend(s, millis, "millisecond");
 		String output = s.toString();
 		output = output.replaceAll("( and )", "\t");
-		return output.trim().replaceAll("(\t)+", "and");
+		return output.trim().replaceAll("(\t)+", " and ");
 	}
 
 	private static void timeCalculate(AtomicLong seconds, int bound, AtomicInteger remainder) {
