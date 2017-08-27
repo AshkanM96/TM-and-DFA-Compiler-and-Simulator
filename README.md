@@ -6,4 +6,4 @@ This is just a repository of Turing-Machine and Deterministic-Finite-Automata Co
 
 *TMSS.java* is similar to *TMS.java* with the minor difference that it can handle Turing-Machines with two-sided tapes(tape infinite on both ends).
 
-*DFA.java* is a Deterministic-Finite-Automata(DFA for short) compiler/simulator class that reads a description of a DFA specified by York-Unifersity-Finite-Automata-File-Format(YUFAFF for short).
+*DFA.java* is a Deterministic-Finite-Automata(DFA for short) compiler/simulator class that reads a description of a DFA specified by York-University-Finite-Automata-File-Format(YUFAFF for short).
