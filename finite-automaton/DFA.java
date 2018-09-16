@@ -7,10 +7,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
+/**
+ * Deterministic Finite Automata compiler/simulator.
+ * 
+ * @author Ashkan Moatamed
+ */
 public class DFA {
 	/*
 	 * for simplicity, all methods only throw IllegalArgumentException so that only one type of
@@ -2316,9 +2319,9 @@ public class DFA {
 			return "nearly 0 milliseconds";
 		}
 
-		int millis = (int) (time % DFA.MILLISECONDS_PER_SECOND);
-		AtomicLong seconds = new AtomicLong();
-		AtomicInteger minutes = new AtomicInteger(), hours = new AtomicInteger(), days = new AtomicInteger();
+		final int millis = (int) (time % DFA.MILLISECONDS_PER_SECOND);
+		final MutableLong seconds = new MutableLong();
+		final MutableInteger minutes = new MutableInteger(), hours = new MutableInteger(), days = new MutableInteger();
 
 		if (time >= DFA.MILLISECONDS_PER_SECOND) {
 			seconds.set(time / DFA.MILLISECONDS_PER_SECOND);
@@ -2327,7 +2330,7 @@ public class DFA {
 			DFA.timeCalculate(seconds, DFA.SECONDS_PER_MINUTE, minutes);
 		}
 
-		StringBuilder s = new StringBuilder("");
+		final StringBuilder s = new StringBuilder("");
 		DFA.timeAppend(s, days.get(), "day");
 		DFA.timeAppend(s, hours.get(), "hour");
 		DFA.timeAppend(s, minutes.get(), "minute");
@@ -2338,8 +2341,8 @@ public class DFA {
 		return output.trim().replaceAll("(\t)+", " and ");
 	}
 
-	private static void timeCalculate(AtomicLong seconds, int bound, AtomicInteger remainder) {
-		long s = seconds.get();
+	private static void timeCalculate(MutableLong seconds, int bound, MutableInteger remainder) {
+		final long s = seconds.get();
 		if (s >= bound) {
 			remainder.set((int) (s / bound));
 			seconds.set(s % bound);
@@ -2378,7 +2381,7 @@ public class DFA {
 		} else if (!(obj instanceof DFA)) {
 			return false;
 		}
-		DFA other = (DFA) obj;
+		final DFA other = (DFA) obj;
 
 		if (this.getNumStates() != other.getNumStates()) {
 			return false;
