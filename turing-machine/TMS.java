@@ -7,10 +7,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
+/**
+ * One-sided infinite tape Turing Machine compiler/simulator.
+ * 
+ * @author Ashkan Moatamed
+ */
 public class TMS {
 	/*
 	 * for simplicity, all methods only throw IllegalArgumentException so that only one type of
@@ -2886,10 +2889,10 @@ public class TMS {
 			return "nearly 0 milliseconds";
 		}
 
-		int millis = (int) (time % TMS.MILLISECONDS_PER_SECOND);
-		AtomicLong seconds = new AtomicLong();
-		AtomicInteger minutes = new AtomicInteger(), hours = new AtomicInteger(), days = new AtomicInteger(),
-				weeks = new AtomicInteger(), months = new AtomicInteger();
+		final int millis = (int) (time % TMS.MILLISECONDS_PER_SECOND);
+		final MutableLong seconds = new MutableLong();
+		final MutableInteger minutes = new MutableInteger(), hours = new MutableInteger(), days = new MutableInteger(),
+				weeks = new MutableInteger(), months = new MutableInteger();
 
 		if (time >= TMS.MILLISECONDS_PER_SECOND) {
 			seconds.set(time / TMS.MILLISECONDS_PER_SECOND);
@@ -2904,7 +2907,7 @@ public class TMS {
 				H = { "hour", "h" };
 		final int index = shortForm ? 1 : 0;
 
-		StringBuilder s = new StringBuilder("");
+		final StringBuilder s = new StringBuilder("");
 		TMS.timeAppend(s, months.get(), "month");
 		TMS.timeAppend(s, weeks.get(), "week");
 		TMS.timeAppend(s, days.get(), "day");
@@ -2925,8 +2928,8 @@ public class TMS {
 		return TMS.formatTime(this.getElapsedProcessTime(), true);
 	}
 
-	private static void timeCalculate(AtomicLong seconds, int bound, AtomicInteger remainder) {
-		long s = seconds.get();
+	private static void timeCalculate(MutableLong seconds, int bound, MutableInteger remainder) {
+		final long s = seconds.get();
 		if (s >= bound) {
 			remainder.set((int) (s / bound));
 			seconds.set(s % bound);
@@ -2970,7 +2973,7 @@ public class TMS {
 		} else if (!(obj instanceof TMS)) {
 			return false;
 		}
-		TMS other = (TMS) obj;
+		final TMS other = (TMS) obj;
 
 		if (this.getNumStates() != other.getNumStates()) {
 			return false;

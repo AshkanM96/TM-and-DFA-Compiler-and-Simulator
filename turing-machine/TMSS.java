@@ -7,10 +7,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
+/**
+ * Two-sided infinite tape Turing Machine compiler/simulator.
+ * 
+ * @author Ashkan Moatamed
+ */
 public class TMSS {
 	/*
 	 * for simplicity, all methods only throw IllegalArgumentException so that only one type of
@@ -2868,10 +2871,10 @@ public class TMSS {
 			return "nearly 0 milliseconds";
 		}
 
-		int millis = (int) (time % TMSS.MILLISECONDS_PER_SECOND);
-		AtomicLong seconds = new AtomicLong();
-		AtomicInteger minutes = new AtomicInteger(), hours = new AtomicInteger(), days = new AtomicInteger(),
-				weeks = new AtomicInteger(), months = new AtomicInteger();
+		final int millis = (int) (time % TMSS.MILLISECONDS_PER_SECOND);
+		final MutableLong seconds = new MutableLong();
+		final MutableInteger minutes = new MutableInteger(), hours = new MutableInteger(), days = new MutableInteger(),
+				weeks = new MutableInteger(), months = new MutableInteger();
 
 		if (time >= TMSS.MILLISECONDS_PER_SECOND) {
 			seconds.set(time / TMSS.MILLISECONDS_PER_SECOND);
@@ -2886,7 +2889,7 @@ public class TMSS {
 				H = { "hour", "h" };
 		final int index = shortForm ? 1 : 0;
 
-		StringBuilder s = new StringBuilder("");
+		final StringBuilder s = new StringBuilder("");
 		TMSS.timeAppend(s, months.get(), "month");
 		TMSS.timeAppend(s, weeks.get(), "week");
 		TMSS.timeAppend(s, days.get(), "day");
@@ -2907,8 +2910,8 @@ public class TMSS {
 		return TMSS.formatTime(this.getElapsedProcessTime(), true);
 	}
 
-	private static void timeCalculate(AtomicLong seconds, int bound, AtomicInteger remainder) {
-		long s = seconds.get();
+	private static void timeCalculate(MutableLong seconds, int bound, MutableInteger remainder) {
+		final long s = seconds.get();
 		if (s >= bound) {
 			remainder.set((int) (s / bound));
 			seconds.set(s % bound);
@@ -2952,7 +2955,7 @@ public class TMSS {
 		} else if (!(obj instanceof TMSS)) {
 			return false;
 		}
-		TMSS other = (TMSS) obj;
+		final TMSS other = (TMSS) obj;
 
 		if (this.getNumStates() != other.getNumStates()) {
 			return false;
