@@ -21,11 +21,24 @@ public class MutableInteger extends Number implements Comparable<MutableInteger>
 	/**
 	 * Construct a new MutableInteger object with the given value.
 	 * 
-	 * @param value
-	 *            the given value
+	 * @param other
+	 *            the given int value
 	 */
-	public MutableInteger(int value) {
-		this.value = value;
+	public MutableInteger(int other) {
+		this.value = other;
+	}
+
+	/**
+	 * Construct a new MutableInteger object with the given value.
+	 * 
+	 * @param other
+	 *            the given Integer value
+	 * 
+	 * @throws NullPointerException
+	 *             If <code>other == null</code>
+	 */
+	public MutableInteger(Integer other) throws NullPointerException {
+		this.value = other.intValue();
 	}
 
 	/**
@@ -112,8 +125,59 @@ public class MutableInteger extends Number implements Comparable<MutableInteger>
 		return ((other == null) ? false : (this.value == other.value));
 	}
 
+	/**
+	 * @param other
+	 *            the given Integer object
+	 * 
+	 * @return <code>(other == null) ? false : (this.value == other.intValue())</code>.
+	 * 
+	 * @see #equals(Object)
+	 */
+	public boolean equals(Integer other) {
+		return ((other == null) ? false : (this.value == other.intValue()));
+	}
+
+	/**
+	 * @param other
+	 *            the given int value
+	 * 
+	 * @return <code>this.value == value</code>.
+	 * 
+	 * @see #equals(Object)
+	 */
+	public boolean equals(int other) {
+		return (this.value == other);
+	}
+
 	@Override
 	public int compareTo(MutableInteger other) throws NullPointerException {
 		return Integer.compare(this.value, other.value);
+	}
+
+	/**
+	 * @param other
+	 *            the given Integer object
+	 * 
+	 * @return <code>Integer.compare(this.value, other.intValue())</code>.
+	 * 
+	 * @throws NullPointerException
+	 *             If <code>other == null</code>
+	 * 
+	 * @see #compareTo(MutableInteger)
+	 */
+	public int compareTo(Integer other) throws NullPointerException {
+		return Integer.compare(this.value, other.intValue());
+	}
+
+	/**
+	 * @param other
+	 *            the given int value
+	 * 
+	 * @return <code>Integer.compare(this.value, other)</code>.
+	 * 
+	 * @see #compareTo(MutableInteger)
+	 */
+	public int compareTo(int other) {
+		return Integer.compare(this.value, other);
 	}
 }

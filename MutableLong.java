@@ -21,11 +21,24 @@ public class MutableLong extends Number implements Comparable<MutableLong> {
 	/**
 	 * Construct a new MutableLong object with the given value.
 	 * 
-	 * @param value
-	 *            the given value
+	 * @param other
+	 *            the given long value
 	 */
-	public MutableLong(long value) {
-		this.value = value;
+	public MutableLong(long other) {
+		this.value = other;
+	}
+
+	/**
+	 * Construct a new MutableLong object with the given value.
+	 * 
+	 * @param other
+	 *            the given Long value
+	 * 
+	 * @throws NullPointerException
+	 *             If <code>other == null</code>
+	 */
+	public MutableLong(Long other) throws NullPointerException {
+		this.value = other.longValue();
 	}
 
 	/**
@@ -112,8 +125,59 @@ public class MutableLong extends Number implements Comparable<MutableLong> {
 		return ((other == null) ? false : (this.value == other.value));
 	}
 
+	/**
+	 * @param other
+	 *            the given Long object
+	 * 
+	 * @return <code>(other == null) ? false : (this.value == other.longValue())</code>.
+	 * 
+	 * @see #equals(Object)
+	 */
+	public boolean equals(Long other) {
+		return ((other == null) ? false : (this.value == other.longValue()));
+	}
+
+	/**
+	 * @param other
+	 *            the given long value
+	 * 
+	 * @return <code>this.value == value</code>.
+	 * 
+	 * @see #equals(Object)
+	 */
+	public boolean equals(long other) {
+		return (this.value == other);
+	}
+
 	@Override
 	public int compareTo(MutableLong other) throws NullPointerException {
 		return Long.compare(this.value, other.value);
+	}
+
+	/**
+	 * @param other
+	 *            the given Long object
+	 * 
+	 * @return <code>Long.compare(this.value, other.longValue())</code>.
+	 * 
+	 * @throws NullPointerException
+	 *             If <code>other == null</code>
+	 * 
+	 * @see #compareTo(MutableLong)
+	 */
+	public int compareTo(Long other) throws NullPointerException {
+		return Long.compare(this.value, other.longValue());
+	}
+
+	/**
+	 * @param other
+	 *            the given long value
+	 * 
+	 * @return <code>Long.compare(this.value, other)</code>.
+	 * 
+	 * @see #compareTo(MutableLong)
+	 */
+	public int compareTo(long other) {
+		return Long.compare(this.value, other);
 	}
 }
