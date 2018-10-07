@@ -16,9 +16,9 @@ import java.util.regex.Pattern;
  */
 public class TMS {
 	/*
-	 * for simplicity, all methods only throw IllegalArgumentException so that only one type of
+	 * For simplicity, all methods only throw IllegalArgumentException so that only one type of
 	 * exception need be handled but in general, it's better practice to throw other types of exceptions
-	 * when appropriate such as NullPointerException, IllegalStateException and etc.
+	 * when appropriate such as NullPointerException, IllegalStateException, and etc.
 	 */
 
 	public static final char DELIMITER_CHAR = ' ';
@@ -34,10 +34,10 @@ public class TMS {
 	public static final String WHITESPACE_REGEX = "(\\s)+";
 	private static final Pattern WHITESPACE_PATTERN = Pattern.compile(TMS.WHITESPACE_REGEX);
 
-	// these three arrays are used to store the transition function
+	// These three arrays are used to store the transition function
 	private int[][] nextState, charToWriteIndex;
 	private String[][] direction;
-	// array used to keep track of defined transitions
+	// Array used to keep track of defined transitions
 	private boolean[][] defined;
 	private int totalNumTransitions, numDefinedTransitions;
 	private int[] stateNumDefined;
@@ -66,7 +66,7 @@ public class TMS {
 	 */
 	private boolean count, checkStringsCount = true;
 	/*
-	 * maps testString to output:stepCount:elapsedProcessTime. always construct results with
+	 * Maps testString to output:stepCount:elapsedProcessTime. Always construct results with
 	 * initialCapacity of maxStringCount so that the need for resizing, rehashing, ... is greatly
 	 * reduced
 	 */
@@ -107,7 +107,7 @@ public class TMS {
 	private int lineNumber;
 
 	/*
-	 * save the result of toString() and getComments() in savedStr and savedCom respectively. also keep
+	 * Save the result of toString() and getComments() in savedStr and savedCom respectively. Also keep
 	 * track of whether the result of actually running toString() and getComments() has changed in
 	 * strChange and comChange (respectively) as to decide whether to run the method or just return the
 	 * saved value.
@@ -122,7 +122,7 @@ public class TMS {
 
 	public static final int LINE_1_NUM_ENTRIES = 3, LINE_3_NUM_ENTRIES = 1, COMMAND_LINE_MAX_NUM_ENTRIES = 8;
 
-	// every month is 30.5 days on average
+	// Every month is 30.5 days on average
 	public static final int SECONDS_PER_MONTH = 18446400, SECONDS_PER_WEEK = 604800, SECONDS_PER_DAY = 86400,
 			SECONDS_PER_HOUR = 3600, SECONDS_PER_MINUTE = 60, MILLISECONDS_PER_SECOND = 1000,
 			NANOSECONDS_PER_MILLISECOND = 1000000;
@@ -141,12 +141,13 @@ public class TMS {
 		return this.numStates;
 	}
 
+	@SuppressWarnings("null")
 	public int setNumStates(int numStates, boolean copyValidTransitions) throws IllegalArgumentException {
 		if (this.getNumStates() == this.validateNumStates(numStates)) {
 			return this.getNumStates();
 		}
 
-		// save all defined transitions
+		// Save all defined transitions
 		String[] definedTransitions = copyValidTransitions ? this.getDefinedTransitions() : null;
 
 		this.numStates = numStates;
@@ -154,22 +155,22 @@ public class TMS {
 		this.stateNumDefined = new int[this.getAcceptState()];
 		this.initializeTransitions();
 
-		if (definedTransitions != null) { // i.e. copyValidTransitions
-			// save exception causes for later restoration
+		if (copyValidTransitions) {
+			// Save exception causes for later restoration
 			String oldCause = this.cause, oldStaticCause = TMS.staticCause;
 
 			Object[] tokens = null;
-			for (int i = 0; i < definedTransitions.length; i++) {
+			for (int i = 0; i != definedTransitions.length; ++i) {
 				tokens = this.validateTransition(definedTransitions[i]);
 				try {
 					this.putTransition((int) tokens[0], (String) tokens[1], (int) tokens[2], (String) tokens[3],
 							(String) tokens[4]);
 				} catch (IllegalArgumentException ex) {
-					// transition described by tokens, is no longer valid therefore nothing else to do
+					// Transition described by tokens, is no longer valid therefore nothing else to do
 				}
 			}
 
-			// restore saved exception causes
+			// Restore saved exception causes
 			this.cause = oldCause;
 			TMS.staticCause = oldStaticCause;
 		}
@@ -396,26 +397,26 @@ public class TMS {
 		System.arraycopy(inputAlphabet, 0, this.inputAlphabet, 0, inputAlphabetSize);
 
 		this.inputIndex = new HashMap<String, Integer>(inputAlphabetSize);
-		for (int i = 0; i < inputAlphabetSize; i++) {
+		for (int i = 0; i != inputAlphabetSize; ++i) {
 			this.inputIndex.put(this.inputAlphabet[i], i);
 		}
 
 		this.tapeAlphabet = new String[this.tapeAlphabetSize = tapeAlphabetSize];
-		// copy sorted input alphabet into (sorted) tape alphabet
+		// Copy sorted input alphabet into (sorted) tape alphabet
 		System.arraycopy(this.inputAlphabet, 0, this.tapeAlphabet, 0, inputAlphabetSize);
 		String s;
-		for (int i = 0, index = inputAlphabetSize; index < this.getBlankIndex(); i++) {
+		for (int i = 0, index = inputAlphabetSize; index != this.getBlankIndex(); ++i) {
 			if (this.inputCharIndexOf(s = tapeAlphabet[i]) == -1) {
-				// copy tapeAlphabet characters that aren't in the inputAlphabet in sorted
+				// Copy tapeAlphabet characters that aren't in the inputAlphabet in sorted
 				// order after the inputAlphabet characters
 				this.tapeAlphabet[index++] = s;
 			}
 		}
 		System.arraycopy(TMS.SPECIAL_TAPE_CHARS, 0, this.tapeAlphabet, this.getBlankIndex(),
-				TMS.NUM_SPECIAL_TAPE_CHARS); // copy special tape chars
+				TMS.NUM_SPECIAL_TAPE_CHARS); // Copy special tape chars
 
 		this.tapeIndex = new HashMap<String, Integer>(tapeAlphabetSize);
-		for (int i = 0; i < tapeAlphabetSize; i++) {
+		for (int i = 0; i != tapeAlphabetSize; ++i) {
 			this.tapeIndex.put(this.tapeAlphabet[i], i);
 		}
 
@@ -434,7 +435,7 @@ public class TMS {
 	}
 
 	public boolean isValidAlphabet(int tapeAlphabetSize, int inputAlphabetSize, String[] tapeAlphabet) {
-		try { // if no exception is thrown then the result is necessarily true
+		try { // If no exception is thrown then the result is necessarily true
 			return (this.validateAlphabet(tapeAlphabetSize, inputAlphabetSize, tapeAlphabet) != null);
 		} catch (IllegalArgumentException ex) {
 			return false;
@@ -452,7 +453,7 @@ public class TMS {
 
 		HashMap<String, Integer> tapeIndex = new HashMap<String, Integer>();
 		String tapeChar;
-		for (int i = 0; i < tapeAlphabet.length; i++) {
+		for (int i = 0; i != tapeAlphabet.length; ++i) {
 			if ((tapeChar = tapeAlphabet[i]) == null) {
 				this.cause = "Given tape alphabet isn't valid since it contains null at index " + i + ".";
 				this.illegalArg();
@@ -480,13 +481,13 @@ public class TMS {
 		return inputAlphabet;
 	}
 
-	// even if it returns true, tapeAlphabetSize isn't necessarily valid since
+	// Even if it returns true, tapeAlphabetSize isn't necessarily valid since
 	// inputAlphabetSize hasn't been taken into account
 	public static boolean isValidTapeAlphabetSize(int tapeAlphabetSize) {
 		return (tapeAlphabetSize >= TMS.MIN_TAPE_ALPHABET_SIZE && tapeAlphabetSize <= TMS.MAX_TAPE_ALPHABET_SIZE);
 	}
 
-	// the absolute tapeAlphabetSize range without taking the value of
+	// The absolute tapeAlphabetSize range without taking the value of
 	// inputAlphabetSize into account
 	public static String getTapeAlphabetSizeRange() {
 		return ("[" + TMS.MIN_TAPE_ALPHABET_SIZE + ", " + TMS.MAX_TAPE_ALPHABET_SIZE + "]");
@@ -548,15 +549,15 @@ public class TMS {
 			return false;
 		}
 
-		for (int i = 0; i < s.length; i++) {
+		for (int i = 0; i != s.length; ++i) {
 			if (s[i] == null) {
 				return false;
 			}
 		}
 
 		String shorter, longer;
-		for (int i = 0; i < s.length; i++) {
-			for (int j = i + 1; j < s.length; j++) {
+		for (int i = 0; i != s.length; ++i) {
+			for (int j = i + 1; j != s.length; ++j) {
 				if (s[i].length() > s[j].length()) {
 					shorter = s[j];
 					longer = s[i].substring(0, s[j].length());
@@ -595,7 +596,7 @@ public class TMS {
 	public int[][] getNextState() {
 		int a = this.getAcceptState(), t = this.getTapeAlphabetSize();
 		int[][] result = new int[a][t];
-		for (int i = 0; i < a; i++) {
+		for (int i = 0; i != a; ++i) {
 			System.arraycopy(this.nextState[i], 0, result[i], 0, t);
 		}
 		return result;
@@ -609,7 +610,7 @@ public class TMS {
 	public int[][] getCharToWriteIndex() {
 		int a = this.getAcceptState(), t = this.getTapeAlphabetSize();
 		int[][] result = new int[a][t];
-		for (int i = 0; i < a; i++) {
+		for (int i = 0; i != a; ++i) {
 			System.arraycopy(this.charToWriteIndex[i], 0, result[i], 0, t);
 		}
 		return result;
@@ -623,8 +624,8 @@ public class TMS {
 	public String[][] getCharToWrite() {
 		int a = this.getAcceptState(), t = this.getTapeAlphabetSize();
 		String[][] result = new String[a][t];
-		for (int i = 0; i < a; i++) {
-			for (int j = 0; j < t; j++) {
+		for (int i = 0; i != a; ++i) {
+			for (int j = 0; j != t; ++j) {
 				result[i][j] = this.tapeAlphabet[this.charToWriteIndex[i][j]];
 			}
 		}
@@ -639,7 +640,7 @@ public class TMS {
 	public String[][] getDirection() {
 		int a = this.getAcceptState(), t = this.getTapeAlphabetSize();
 		String[][] result = new String[a][t];
-		for (int i = 0; i < a; i++) {
+		for (int i = 0; i != a; ++i) {
 			System.arraycopy(this.direction[i], 0, result[i], 0, t);
 		}
 		return result;
@@ -653,7 +654,7 @@ public class TMS {
 	public boolean[][] getDefined() {
 		int a = this.getAcceptState(), t = this.getTapeAlphabetSize();
 		boolean[][] result = new boolean[a][t];
-		for (int i = 0; i < a; i++) {
+		for (int i = 0; i != a; ++i) {
 			System.arraycopy(this.defined[i], 0, result[i], 0, t);
 		}
 		return result;
@@ -724,7 +725,7 @@ public class TMS {
 	public String[] getTransitions(int initialState, boolean format, boolean print) throws IllegalArgumentException {
 		this.validateInitialState(initialState);
 		String[] result = new String[this.getTapeAlphabetSize()];
-		for (int i = 0; i < result.length; i++) {
+		for (int i = 0; i != result.length; ++i) {
 			result[i] = this.getTransition(initialState, i, format);
 			System.out.print(print ? (result[i] + '\n') : "");
 		}
@@ -750,8 +751,8 @@ public class TMS {
 	public String[] getTransitions(boolean format, boolean print) {
 		String[] result = new String[this.getTotalNumTransitions()];
 		int index = 0;
-		for (int i = 0; i < this.getAcceptState(); i++) {
-			for (int j = 0; j < this.getTapeAlphabetSize(); j++) {
+		for (int i = 0; i != this.getAcceptState(); ++i) {
+			for (int j = 0; j != this.getTapeAlphabetSize(); ++j) {
 				result[index++] = this.getTransition(i, j, format);
 				System.out.print(print ? (result[index - 1] + '\n') : "");
 			}
@@ -809,17 +810,17 @@ public class TMS {
 		int length = 0, t = this.getTapeAlphabetSize();
 		String transition;
 		String[] temp = new String[t];
-		for (int i = 0; i < t; i++) {
+		for (int i = 0; i != t; ++i) {
 			transition = null;
 			if (this.defined[initialState][i]) {
 				transition = this.getTransition(initialState, i, format);
-				length++;
+				++length;
 			}
 			temp[i] = transition;
 		}
 
 		String[] result = new String[length];
-		for (int i = 0, index = 0; index < length; i++) {
+		for (int i = 0, index = 0; index != length; ++i) {
 			if ((transition = temp[i]) != null) {
 				result[index++] = transition;
 				System.out.print(print ? (transition + '\n') : "");
@@ -847,8 +848,8 @@ public class TMS {
 	public String[] getDefinedTransitions(boolean format, boolean print) {
 		int index = 0, numDef = this.getNumDefinedTransitions();
 		String[] result = new String[numDef];
-		for (int i = 0; i < this.getAcceptState() && index < numDef; i++) {
-			for (int j = 0; j < this.getTapeAlphabetSize() && index < numDef; j++) {
+		for (int i = 0; i != this.getAcceptState() && index != numDef; ++i) {
+			for (int j = 0; j != this.getTapeAlphabetSize() && index != numDef; ++j) {
 				if (this.defined[i][j]) {
 					result[index++] = this.getTransition(i, j, format);
 					System.out.print(print ? (result[index - 1] + '\n') : "");
@@ -926,7 +927,7 @@ public class TMS {
 			}
 			this.cause += "(" + direction + ") isn't a valid direction(one of ";
 			StringBuilder s = new StringBuilder("");
-			for (int i = 0; i < this.getNumValidDirections(); i++) {
+			for (int i = 0; i != this.getNumValidDirections(); ++i) {
 				s.append(this.validDirections[i] + (i != this.getNumValidDirections() - 1 ? ", " : ""));
 			}
 			this.cause += s.toString() + ").";
@@ -960,13 +961,13 @@ public class TMS {
 		if (!this.getIncludeStill() && this.stillCount != 0) {
 			result = new String[this.stillCount];
 			int index = 0;
-			for (int i = 0; i < this.getAcceptState() && this.stillCount != 0; i++) {
-				for (int j = 0; j < this.getTapeAlphabetSize() && this.stillCount != 0; j++) {
+			for (int i = 0; i != this.getAcceptState() && this.stillCount != 0; ++i) {
+				for (int j = 0; j != this.getTapeAlphabetSize() && this.stillCount != 0; ++j) {
 					if (this.direction[i][j].equals(TMS.STILL)) {
 						result[index++] = this.resetTransition(i, j);
 						this.defined[i][j] = false;
-						this.numDefinedTransitions--;
-						this.stillCount--;
+						--this.numDefinedTransitions;
+						--this.stillCount;
 					}
 				}
 			}
@@ -1007,7 +1008,7 @@ public class TMS {
 			int max = Math.max(minLength, maxLength), start = this.isConstructing ? max : this.getInitialLength();
 			int s = this.getInputAlphabetSize(), estimateStringCount;
 
-			// in general estimateStringCount can be calculated from
+			// In general estimateStringCount can be calculated from
 			// (s^(max + 1) - s^start) / (s - 1)
 			if (this.isConstructing) {
 				// start == max and as such the expression simplifies to just
@@ -1016,7 +1017,7 @@ public class TMS {
 				estimateStringCount = ((int) Math.pow(s, start));
 			} else {
 				int high = 1, low = 1;
-				for (int i = 0; i < max + 1; i++) {
+				for (int i = 0; i != max + 1; ++i) {
 					high *= s;
 					low *= i < start ? s : 1;
 				}
@@ -1057,7 +1058,7 @@ public class TMS {
 		return this.minLength;
 	}
 
-	// even if it returns true, minLength isn't necessarily valid since
+	// Even if it returns true, minLength isn't necessarily valid since
 	// initialLength hasn't been taken into account
 	public static boolean isValidMinLength(int minLength) {
 		return (minLength >= 0);
@@ -1095,12 +1096,12 @@ public class TMS {
 		String minChar = this.inputAlphabet[0];
 		if (format) {
 			result.append("\"" + minChar);
-			for (int i = 1; i < this.getMinLength(); i++) {
+			for (int i = 1; i != this.getMinLength(); ++i) {
 				result.append(" " + minChar);
 			}
 			result.append("\"");
 		} else {
-			for (int i = 0; i < this.getMinLength(); i++) {
+			for (int i = 0; i != this.getMinLength(); ++i) {
 				result.append(minChar);
 			}
 		}
@@ -1114,7 +1115,7 @@ public class TMS {
 	public ArrayList<Integer> getMinArray() {
 		int minLength = this.getMinLength();
 		ArrayList<Integer> result = new ArrayList<Integer>(minLength);
-		for (int i = 0; i < minLength; i++) {
+		for (int i = 0; i != minLength; ++i) {
 			result.add(0);
 		}
 		return result;
@@ -1124,7 +1125,7 @@ public class TMS {
 		return this.maxLength;
 	}
 
-	// even if it returns true, maxLength isn't necessarily valid since
+	// Even if it returns true, maxLength isn't necessarily valid since
 	// initialLength hasn't been taken into account
 	public static boolean isValidMaxLength(int maxLength) {
 		return (maxLength >= 0);
@@ -1162,12 +1163,12 @@ public class TMS {
 		String maxChar = this.inputAlphabet[this.getMaxInputIndex()];
 		if (format) {
 			result.append("\"" + maxChar);
-			for (int i = 1; i < this.getMaxLength(); i++) {
+			for (int i = 1; i != this.getMaxLength(); ++i) {
 				result.append(" " + maxChar);
 			}
 			result.append("\"");
 		} else {
-			for (int i = 0; i < this.getMaxLength(); i++) {
+			for (int i = 0; i != this.getMaxLength(); ++i) {
 				result.append(maxChar);
 			}
 		}
@@ -1181,7 +1182,7 @@ public class TMS {
 	public ArrayList<Integer> getMaxArray() {
 		int maxLength = this.getMaxLength(), index = this.getMaxInputIndex();
 		ArrayList<Integer> result = new ArrayList<Integer>(maxLength);
-		for (int i = 0; i < maxLength; i++) {
+		for (int i = 0; i != maxLength; ++i) {
 			result.add(index);
 		}
 		return result;
@@ -1197,7 +1198,7 @@ public class TMS {
 
 	private String setLengthRange(int minLength, int maxLength, boolean checkStringsCount)
 			throws IllegalArgumentException {
-		// save field values in case of restoring
+		// Save field values in case of restoring
 		int savedMin = this.getMinLength(), savedMax = this.getMaxLength();
 		boolean savedCheckStringsCount = this.checkStringsCount, savedStrChange = this.strChange;
 		try {
@@ -1226,7 +1227,7 @@ public class TMS {
 	}
 
 	public Object[] setRangeString(int minLength, int maxLength, String initialString) throws IllegalArgumentException {
-		// save field values in case of restoring
+		// Save field values in case of restoring
 		boolean savedIsConstructing = this.isConstructing, savedStrChange = this.strChange;
 		int savedMin = this.getMinLength(), savedMax = this.getMaxLength();
 		try {
@@ -1241,10 +1242,10 @@ public class TMS {
 		Object[] result = null;
 		ArrayList<Integer> a = null;
 		try {
-			// check if testString is defined over input alphabet
+			// Check if testString is defined over input alphabet
 			a = this.validateTestString(initialString);
 		} catch (IllegalArgumentException ex) {
-			// since it isn't defined, check if isDefault
+			// Since it isn't defined, check if isDefault
 			if (this.isConstructing && TMS.isDefault(initialString)) {
 				result = this.setInitialArray(this.getMinArray(), false);
 			} else {
@@ -1258,7 +1259,7 @@ public class TMS {
 		}
 		try {
 			if (a != null) {
-				// since it is defined, store it in the class variable
+				// Since it is defined, store it in the class variable
 				result = this.setInitialArray(a, false);
 			}
 			this.validateStringsCount(this.getMinLength(), this.getMaxLength());
@@ -1275,7 +1276,7 @@ public class TMS {
 
 	public Object[] setRangeArray(int minLength, int maxLength, ArrayList<Integer> initialArray)
 			throws IllegalArgumentException {
-		// save field values in case of restoring
+		// Save field values in case of restoring
 		boolean savedIsConstructing = this.isConstructing, savedStrChange = this.strChange;
 		int savedMin = this.getMinLength(), savedMax = this.getMaxLength();
 		try {
@@ -1290,7 +1291,7 @@ public class TMS {
 		Object[] result = null;
 		String s = null;
 		try {
-			// check if testString is defined over input alphabet
+			// Check if testString is defined over input alphabet
 			s = this.validateTestString(initialArray);
 		} catch (IllegalArgumentException ex) {
 			if (this.isConstructing) {
@@ -1306,7 +1307,7 @@ public class TMS {
 		}
 		try {
 			if (s != null) {
-				// since it is defined, store it in the class variable
+				// Since it is defined, store it in the class variable
 				result = this.setInitialArray(initialArray, false);
 			}
 			this.validateStringsCount(this.getMinLength(), this.getMaxLength());
@@ -1355,7 +1356,7 @@ public class TMS {
 	private Object[] setInitialString(String initialString, boolean validate) throws IllegalArgumentException {
 		ArrayList<Integer> a = validate ? this.validateTestString(initialString) : this.toArray(initialString);
 		if (initialString.equals(this.getInitialString())) {
-			// impossible to happen when constructing since this.initialString is null
+			// Impossible to happen when constructing since this.initialString is null
 			return this.getInitialStringRepresentations();
 		}
 
@@ -1395,7 +1396,7 @@ public class TMS {
 			this.isSimulating = false;
 		}
 		if (s.equals(this.getInitialString())) {
-			// impossible to happen when constructing since this.initialString is null
+			// Impossible to happen when constructing since this.initialString is null
 			return this.getInitialStringRepresentations();
 		}
 
@@ -1435,10 +1436,9 @@ public class TMS {
 		}
 
 		String check = s;
-		int i = 1, index;
-		while (i <= check.length()) {
+		for (int i = 1, index; i <= check.length(); /* Update inside. */) {
 			if ((index = this.inputCharIndexOf(check.substring(0, i))) == -1) {
-				i++;
+				++i;
 			} else {
 				a.add(index);
 				if (i < check.length()) {
@@ -1464,12 +1464,12 @@ public class TMS {
 		StringBuilder output = new StringBuilder("");
 		if (format) {
 			output.append("\"" + this.inputAlphabet[testString.get(0)]);
-			for (int i = 1; i < testString.size(); i++) {
+			for (int i = 1; i != testString.size(); ++i) {
 				output.append(" " + this.inputAlphabet[testString.get(i)]);
 			}
 			output.append("\"");
 		} else {
-			for (int i = 0; i < testString.size(); i++) {
+			for (int i = 0; i != testString.size(); ++i) {
 				output.append(this.inputAlphabet[testString.get(i)]);
 			}
 		}
@@ -1673,7 +1673,7 @@ public class TMS {
 		this.offerComments(comments);
 		this.isConstructing = false;
 		this.cause = TMS.staticCause = null;
-		TMS.machineCount++;
+		++TMS.machineCount;
 	}
 
 	public TMS(int numStates, int tapeAlphabetSize, int inputAlphabetSize, String[] tapeAlphabet, boolean includeStill,
@@ -1763,7 +1763,7 @@ public class TMS {
 		this(TMS.MIN_NUM_STATES, tapeAlphabetSize, inputAlphabetSize, tapeAlphabet);
 	}
 
-	// copy constructor
+	// Copy constructor
 	public TMS(TMS other) throws NullPointerException {
 		this(other.getNumStates(), other.getTapeAlphabetSize(), other.getInputAlphabetSize(),
 				other.getTapeAlphabet(true), other.getIncludeStill(), other.getNumDefinedTransitions(),
@@ -1776,13 +1776,13 @@ public class TMS {
 		return new TMS(this);
 	}
 
-	// by creating a copy from calling the toString method,
+	// By creating a copy from calling the toString method,
 	// the value of toString is saved for this instance as well
 	public TMS getStringCopy() {
 		return new TMS(this.toString());
 	}
 
-	// creates a turing machine by reading it (in YUTMFF) from in
+	// Creates a turing machine by reading it (in YUTMFF) from in
 	@SuppressWarnings("null")
 	public TMS(Scanner in) throws IllegalArgumentException {
 		this.isScanning = this.isConstructing = true;
@@ -1797,9 +1797,9 @@ public class TMS {
 				TMS.staticCause = "Given machine description didn't have a first line.";
 				TMS.illegalArg(TMS.getStaticCause());
 			}
-			// process first line
+			// Process first line
 			String line = in.nextLine();
-			this.lineNumber++;
+			++this.lineNumber;
 			String[] s = line.split(TMS.DELIMITER_STRING);
 			if (s.length != TMS.LINE_1_NUM_ENTRIES || TMS.countDelimiters(line) != s.length - 1) {
 				TMS.staticCause = "Given first line(" + line + ") isn't valid.";
@@ -1840,9 +1840,9 @@ public class TMS {
 				TMS.staticCause = "Given machine description didn't have a second line.";
 				TMS.illegalArg(TMS.getStaticCause());
 			}
-			// process second line
+			// Process second line
 			line = in.nextLine();
-			this.lineNumber++;
+			++this.lineNumber;
 			s = line.split(TMS.DELIMITER_STRING);
 			if (s.length != tapeAlphabetSize - TMS.NUM_SPECIAL_TAPE_CHARS
 					|| TMS.countDelimiters(line) != s.length - 1) {
@@ -1860,9 +1860,9 @@ public class TMS {
 				TMS.staticCause = "Given machine description didn't have a third line.";
 				TMS.illegalArg(TMS.getStaticCause());
 			}
-			// process third line
+			// Process third line
 			line = in.nextLine();
-			this.lineNumber++;
+			++this.lineNumber;
 			s = line.split(TMS.DELIMITER_STRING);
 			if (s.length != TMS.LINE_3_NUM_ENTRIES || TMS.countDelimiters(line) != s.length - 1) {
 				TMS.staticCause = "Given third line(" + line + ") isn't valid.";
@@ -1880,9 +1880,9 @@ public class TMS {
 				TMS.illegalArg(TMS.getStaticCause());
 			}
 
-			// process transition lines
+			// Process transition lines
 			String[] transitions = new String[numTransitions];
-			for (int i = 0; i < numTransitions; i++) {
+			for (int i = 0; i != numTransitions; ++i) {
 				if (!in.hasNextLine()) {
 					TMS.staticCause = "Given machine description didn't have line " + (i + 4) + ".";
 					TMS.illegalArg(TMS.getStaticCause());
@@ -1901,10 +1901,10 @@ public class TMS {
 					readMaxLength = TMS.DEFAULT_MAX_LENGTH;
 			long readMaxSteps = TMS.DEFAULT_MAX_STEPS, readMaxProcessTime = TMS.DEFAULT_MAX_PROCESS_TIME;
 			String readInitialString = TMS.DEFAULT_INITIAL_STRING;
-			// process command line
+			// Process command line
 			if (in.hasNextLine()) {
 				line = in.nextLine();
-				this.lineNumber++;
+				++this.lineNumber;
 				if (!line.isEmpty()) {
 					s = line.split(TMS.DELIMITER_STRING);
 					if (s.length > TMS.COMMAND_LINE_MAX_NUM_ENTRIES || TMS.countDelimiters(line) != s.length - 1) {
@@ -1957,7 +1957,7 @@ public class TMS {
 
 							readMinLength = Math.min(first, second);
 							readMaxLength = Math.max(first, second);
-							for (int i = 0; i < readMinLength; i++) {
+							for (int i = 0; i != readMinLength; ++i) {
 								readInitialString += this.inputAlphabet[0];
 							}
 						}
@@ -2028,26 +2028,26 @@ public class TMS {
 				this.illegalArg();
 			}
 
-			// process comments
+			// Process comments
 			this.setIncludeComments(TMS.DEFAULT_INCLUDE_COMMENTS);
 			StringBuilder comments = new StringBuilder("");
 			while (in.hasNextLine()) {
 				comments.append(in.nextLine() + '\n');
-				this.lineNumber++;
+				++this.lineNumber;
 			}
-			in.close(); // close upon success
-			// trim last extra '\n' from comments if it exists
+			in.close(); // Close upon success
+			// Trim last extra '\n' from comments if it exists
 			this.offerComments(comments.length() == 0 ? comments : comments.subSequence(0, comments.length() - 1));
 
 			this.isScanning = this.isConstructing = false;
 			this.cause = TMS.staticCause = null;
-			TMS.machineCount++;
+			++TMS.machineCount;
 		} catch (IllegalArgumentException ex) {
-			in.close(); // close upon failure to avoid resource leak
+			in.close(); // Close upon failure to avoid resource leak
 			ex.printStackTrace();
 			throw new IllegalArgumentException(ex.getMessage());
 		} catch (IllegalStateException ex) {
-			// no need to close scanner since it's already closed
+			// No need to close scanner since it's already closed
 			ex.printStackTrace();
 			TMS.staticCause = "Given scanner is closed.";
 			TMS.illegalArg(TMS.getStaticCause());
@@ -2075,10 +2075,6 @@ public class TMS {
 		this(new Scanner(s));
 	}
 
-	public TMS() throws IllegalArgumentException {
-		this(System.in);
-	}
-
 	@SuppressWarnings("null")
 	public String[] putTransitions(int numTransitions, String[] transitions, boolean[] replace)
 			throws IllegalArgumentException {
@@ -2093,10 +2089,10 @@ public class TMS {
 			this.illegalArg();
 		}
 
-		for (int i = 0; i < numTransitions; i++) {
+		for (int i = 0; i != numTransitions; ++i) {
 			String line = transitions[i];
-			// increment lineNumber regardless since it's a private variable with no accessor
-			this.lineNumber++;
+			// Increment lineNumber regardless since it's a private variable with no accessor
+			++this.lineNumber;
 			if (line == null) {
 				this.cause = "Given transitions array isn't valid since it contains null at index " + i + ".";
 				this.illegalArg();
@@ -2152,15 +2148,15 @@ public class TMS {
 		this.charToWriteIndex[initialState][initialCharIndex] = finalCharIndex;
 		if (!this.defined[initialState][initialCharIndex]) {
 			this.defined[initialState][initialCharIndex] = true;
-			this.numDefinedTransitions++;
-			this.stateNumDefined[initialState]++;
+			++this.numDefinedTransitions;
+			++this.stateNumDefined[initialState];
 			this.stillCount += direction.equals(TMS.STILL) ? 1 : 0;
 		} else {
 			String curDir = this.direction[initialState][initialCharIndex];
 			if (!curDir.equals(TMS.STILL) && direction.equals(TMS.STILL)) {
-				this.stillCount++; // gain a STILL direction
+				++this.stillCount; // Gain a STILL direction
 			} else if (curDir.equals(TMS.STILL) && !direction.equals(TMS.STILL)) {
-				this.stillCount--; // lose a STILL direction
+				--this.stillCount; // Lose a STILL direction
 			}
 		}
 		this.direction[initialState][initialCharIndex] = direction;
@@ -2185,7 +2181,7 @@ public class TMS {
 
 	public boolean isValidTransition(int initialState, String initialChar, int finalState, String finalChar,
 			String direction) {
-		try { // if no exception is thrown then the result is necessarily true
+		try { // If no exception is thrown then the result is necessarily true
 			return (this.validateTransition(initialState, initialChar, finalState, finalChar, direction) != null);
 		} catch (IllegalArgumentException ex) {
 			return false;
@@ -2268,7 +2264,7 @@ public class TMS {
 	private String validateLeftend(int initialCharIndex, int finalCharIndex, String direction, String transition)
 			throws IllegalArgumentException {
 		if (initialCharIndex == this.getLeftendIndex()) {
-			// check that the leftend marker is handled correctly
+			// Check that the leftend marker is handled correctly
 			if (!direction.equals(TMS.RIGHT) || finalCharIndex != this.getLeftendIndex()) {
 				this.cause = "Given transition";
 				if (this.isScanning) {
@@ -2283,7 +2279,7 @@ public class TMS {
 
 	private String resetTransition(int initialState, int initialCharIndex) {
 		String transition = this.getTransition(initialState, initialCharIndex, false);
-		// set default values
+		// Set default values
 		this.nextState[initialState][initialCharIndex] = initialState;
 		this.charToWriteIndex[initialState][initialCharIndex] = initialCharIndex;
 		this.direction[initialState][initialCharIndex] = TMS.RIGHT;
@@ -2292,8 +2288,8 @@ public class TMS {
 
 	private void finalizeReset(int initialState, int initialCharIndex, String direction) {
 		this.defined[initialState][initialCharIndex] = false;
-		this.numDefinedTransitions--;
-		this.stateNumDefined[initialState]--;
+		--this.numDefinedTransitions;
+		--this.stateNumDefined[initialState];
 		this.stillCount += direction.equals(TMS.STILL) ? -1 : 0;
 		this.strChange = true;
 	}
@@ -2311,7 +2307,7 @@ public class TMS {
 	public String[] resetTransitions(int initialState) throws IllegalArgumentException {
 		this.validateInitialState(initialState);
 		String[] result = new String[this.getTapeAlphabetSize()];
-		for (int i = 0; i < result.length; i++) {
+		for (int i = 0; i != result.length; ++i) {
 			String direction = this.direction[initialState][i];
 			result[i] = this.resetTransition(initialState, i);
 			if (this.defined[initialState][i]) {
@@ -2324,9 +2320,9 @@ public class TMS {
 	public String[] resetTransitions() {
 		String[] result = new String[this.getTotalNumTransitions()];
 		int index = 0;
-		for (int i = 0; i < this.getAcceptState(); i++) {
+		for (int i = 0; i != this.getAcceptState(); ++i) {
 			this.stateNumDefined[i] = 0;
-			for (int j = 0; j < this.getTapeAlphabetSize(); j++) {
+			for (int j = 0; j != this.getTapeAlphabetSize(); ++j) {
 				result[index++] = this.resetTransition(i, j);
 				this.defined[i][j] = false;
 			}
@@ -2355,19 +2351,19 @@ public class TMS {
 		int length = 0, t = this.getTapeAlphabetSize();
 		String transition;
 		String[] temp = new String[t];
-		for (int i = 0; i < t && this.stateNumDefined[initialState] != 0; i++) {
+		for (int i = 0; i != t && this.stateNumDefined[initialState] != 0; ++i) {
 			transition = null;
 			if (this.defined[initialState][i]) {
 				String direction = this.direction[initialState][i];
 				transition = this.resetTransition(initialState, i);
 				this.finalizeReset(initialState, i, direction);
-				length++;
+				++length;
 			}
 			temp[i] = transition;
 		}
 
 		String[] result = new String[length];
-		for (int i = 0, index = 0; index < length; i++) {
+		for (int i = 0, index = 0; index != length; ++i) {
 			if ((transition = temp[i]) != null) {
 				result[index++] = transition;
 			}
@@ -2378,8 +2374,8 @@ public class TMS {
 	public String[] resetDefinedTransitions() {
 		String[] result = new String[this.getNumDefinedTransitions()];
 		int index = 0;
-		for (int i = 0; i < this.getAcceptState() && this.getNumDefinedTransitions() != 0; i++) {
-			for (int j = 0; j < this.getTapeAlphabetSize() && this.getNumDefinedTransitions() != 0; j++) {
+		for (int i = 0; i != this.getAcceptState() && this.getNumDefinedTransitions() != 0; ++i) {
+			for (int j = 0; j != this.getTapeAlphabetSize() && this.getNumDefinedTransitions() != 0; ++j) {
 				if (this.defined[i][j]) {
 					String direction = this.direction[i][j];
 					result[index++] = this.resetTransition(i, j);
@@ -2397,9 +2393,9 @@ public class TMS {
 		this.direction = new String[a][t];
 		this.defined = new boolean[a][t];
 		this.numDefinedTransitions = 0;
-		for (int i = 0; i < a; i++) {
-			for (int j = 0; j < t; j++) {
-				// set default values
+		for (int i = 0; i != a; ++i) {
+			for (int j = 0; j != t; ++j) {
+				// Set default values
 				this.nextState[i][j] = i;
 				this.charToWriteIndex[i][j] = j;
 				this.direction[i][j] = TMS.RIGHT;
@@ -2416,7 +2412,7 @@ public class TMS {
 		}
 
 		int count = 0;
-		for (int i = 0; i < s.length(); i++) {
+		for (int i = 0; i != s.length(); ++i) {
 			count += s.charAt(i) == TMS.DELIMITER_CHAR ? 1 : 0;
 		}
 		return count;
@@ -2431,16 +2427,16 @@ public class TMS {
 		if (s.length() <= 1) {
 			return lower;
 		} else if (s.substring(1).equals(lower.substring(1))) {
-			return lower; // matches [A-Z][a-z]*
+			return lower; // Matches [A-Z][a-z]*
 		} else if (s.equals(s.toUpperCase())) {
-			return lower; // matches [A-Z]+
+			return lower; // Matches [A-Z]+
 		}
 
 		return null;
 	}
 
 	public static boolean isValidBoolean(String s) {
-		try { // if no exception is thrown then the result is necessarily true
+		try { // If no exception is thrown then the result is necessarily true
 			return (TMS.parseBoolean(s) || true);
 		} catch (IllegalArgumentException ex) {
 			return false;
@@ -2499,7 +2495,7 @@ public class TMS {
 		}
 
 		this.acceptCount = this.rejectCount = this.infiniteCount = 0;
-		// maps testString to output:stepCount:elapsedProcessTime
+		// Maps testString to output:stepCount:elapsedProcessTime
 		this.results = new HashMap<ArrayList<Integer>, String>(this.getMaxStringCount());
 
 		long beforeTime = System.nanoTime();
@@ -2561,11 +2557,11 @@ public class TMS {
 		int output = this.run(testString, initialState, initialHeadPos, print);
 		if (this.count) {
 			if (output == 1) {
-				this.acceptCount++;
+				++this.acceptCount;
 			} else if (output == 0) {
-				this.rejectCount++;
+				++this.rejectCount;
 			} else { // output == -1 || output == -2
-				this.infiniteCount++;
+				++this.infiniteCount;
 			}
 		}
 		return output;
@@ -2589,16 +2585,16 @@ public class TMS {
 
 		this.stepCount = this.elapsedProcessTime = 0;
 		long beforeTime;
-		// run the machine for maxSteps steps
+		// Run the machine for maxSteps steps
 		while (state < this.getAcceptState() && ++this.stepCount <= this.getMaxSteps()) {
 			beforeTime = this.getTimeLimit() ? System.nanoTime() : 0;
 
 			if (headPos == tape.size()) {
-				// extend tape if machine has run beyond right end
+				// Extend tape if machine has run beyond right end
 				tape.add(this.getBlankIndex());
 			}
 
-			// simulate one step of the machine
+			// Simulate one step of the machine
 			int oldCharIndex = tape.get(headPos);
 			tape.set(headPos, this.charToWriteIndex[state][oldCharIndex]);
 			String direction = this.direction[state][oldCharIndex];
@@ -2607,7 +2603,7 @@ public class TMS {
 			}
 			state = this.nextState[state][oldCharIndex];
 
-			// keep track of process time
+			// Keep track of process time
 			if (this.getTimeLimit()) {
 				this.elapsedProcessTime += System.nanoTime() - beforeTime;
 				if (this.getElapsedProcessTime() > this.nanoMaxProcessTime) {
@@ -2670,7 +2666,7 @@ public class TMS {
 		if (pos != -1) {
 			testString.set(pos, testString.get(pos) + 1);
 		} else {
-			testString.add(0); // only when testString is the max string of its length
+			testString.add(0); // Only when testString is the max string of its length
 		}
 		return testString;
 	}
@@ -2703,7 +2699,7 @@ public class TMS {
 	}
 
 	public boolean isValidTape(ArrayList<Integer> tape) {
-		try { // if no exception is thrown then the result is necessarily true
+		try { // If no exception is thrown then the result is necessarily true
 			return (this.validateTape(tape) != null);
 		} catch (IllegalArgumentException ex) {
 			return false;
@@ -2723,7 +2719,7 @@ public class TMS {
 			this.illegalArg();
 		}
 
-		for (int i = 1; i < tape.size(); i++) {
+		for (int i = 1; i != tape.size(); ++i) {
 			if (!this.isValidTapeCharIndex(i)) {
 				this.cause = "Character index " + (i + 1)
 						+ " on the given turing machine tape isn't valid(not in the range of "
@@ -2751,12 +2747,12 @@ public class TMS {
 
 	public void printMachine() {
 		System.out.print("\nTape alphabet:");
-		for (int i = 0; i < this.getTapeAlphabetSize(); i++) {
+		for (int i = 0; i != this.getTapeAlphabetSize(); ++i) {
 			System.out.print(" " + this.tapeAlphabet[i]);
 		}
 
 		System.out.print("\nInput alphabet:");
-		for (int i = 0; i < this.getInputAlphabetSize(); i++) {
+		for (int i = 0; i != this.getInputAlphabetSize(); ++i) {
 			System.out.print(" " + this.inputAlphabet[i]);
 		}
 
@@ -2765,7 +2761,7 @@ public class TMS {
 		this.printTransitions(true);
 	}
 
-	// prints a configuration of the machine
+	// Prints a configuration of the machine
 	public ArrayList<Integer> printConfig(ArrayList<Integer> tape, int state, int headPos)
 			throws IllegalArgumentException {
 		if (!this.isSimulating) {
@@ -2776,7 +2772,7 @@ public class TMS {
 			System.out.print("Configuration after " + this.comma() + this.getSteps() + ": ");
 		}
 
-		for (int i = 0; i < tape.size(); i++) {
+		for (int i = 0; i != tape.size(); ++i) {
 			if (headPos == i) {
 				System.out.print("q" + state + " ");
 			}
@@ -2846,7 +2842,7 @@ public class TMS {
 	}
 
 	/*
-	 * throw an IllegalArgumentException with padding "\n" so that the exception message appears
+	 * Throw an IllegalArgumentException with padding "\n" so that the exception message appears
 	 * separately on the System.err PrintStream.
 	 */
 	private static void illegalArg(String cause) throws IllegalArgumentException {
@@ -2857,7 +2853,7 @@ public class TMS {
 		TMS.illegalArg(this.getCause());
 	}
 
-	// recursively add a "," after every 3 characters of s starting from the right
+	// Recursively add a "," after every 3 characters of s starting from the right
 	public static String comma(String s) throws NullPointerException {
 		if (s.length() <= 3) {
 			return s;
@@ -2950,7 +2946,7 @@ public class TMS {
 		TMS.timeAppend(s, val, unit, false);
 	}
 
-	// returns 0 for long values out of Integer bounds
+	// Returns 0 for long values out of Integer bounds
 	public static int safeCastLong2Int(long l) {
 		if (l >= Integer.MIN_VALUE && l <= Integer.MAX_VALUE) {
 			return ((int) l);
@@ -2985,8 +2981,8 @@ public class TMS {
 			return false;
 		}
 
-		for (int i = 0; i < this.getAcceptState(); i++) {
-			for (int j = 0; j < this.getTapeAlphabetSize(); j++) {
+		for (int i = 0; i != this.getAcceptState(); ++i) {
+			for (int j = 0; j != this.getTapeAlphabetSize(); ++j) {
 				if (this.nextState[i][j] != other.nextState[i][j]) {
 					return false;
 				} else if (this.charToWriteIndex[i][j] != other.charToWriteIndex[i][j]) {
@@ -3027,26 +3023,26 @@ public class TMS {
 		}
 		StringBuilder output = new StringBuilder("");
 
-		// first line
+		// First line
 		output.append(
 				this.getNumStates() + " " + this.getTapeAlphabetSize() + " " + this.getInputAlphabetSize() + '\n');
 
-		// second line
-		for (int i = 0; i < this.getBlankIndex(); i++) {
+		// Second line
+		for (int i = 0; i != this.getBlankIndex(); ++i) {
 			output.append(this.tapeAlphabet[i]);
 			output.append(i != this.getBlankIndex() - 1 ? " " : "");
 		}
 
-		// third line
+		// Third line
 		output.append('\n' + this.getNumDefinedTransitions() + '\n');
 
-		// transition lines
+		// Transition lines
 		String[] definedTransitions = this.getDefinedTransitions();
-		for (int i = 0; i < definedTransitions.length; i++) {
+		for (int i = 0; i != definedTransitions.length; ++i) {
 			output.append(definedTransitions[i] + '\n');
 		}
 
-		// command line
+		// Command line
 		if (this.getMaxStringCount() == 0) {
 			output.append("0");
 		} else {
@@ -3071,7 +3067,7 @@ public class TMS {
 			}
 		}
 
-		// comments
+		// Comments
 		output.append("\n" + (this.getIncludeComments() ? this.comments : ""));
 
 		this.strChange = false;
@@ -3081,27 +3077,27 @@ public class TMS {
 	private String commandLine(String command) {
 		while (command.endsWith(TMS.DEFAULT)) {
 			int index = command.lastIndexOf(TMS.DEFAULT);
-			// remove last occurrence of | default| or just |default|
+			// Remove last occurrence of | default| or just |default|
 			command = index != 0 ? command.substring(0, index - 1) : "";
 		}
 		if (!command.isEmpty()) {
 			String[] s = command.split(TMS.DELIMITER_STRING);
 			if (s.length == 5 && this.getInitialLength() == this.getMinLength()
 					&& this.isMinTestString(this.initialArray)) {
-				// special case where the initialString is the minimum
+				// Special case where the initialString is the minimum
 				// possible String with length in the range
 				// [minLength, maxLength]: the initialString(s[4])
 				// can be removed since we can accomplish the same
 				// effect by having nothing there
 				command = s[0] + " " + s[1] + " " + s[2] + " " + s[3];
 			} else if (s.length == 3 && this.getMinLength() == TMS.DEFAULT_MIN_LENGTH) {
-				// special case where the minLength is its default value
+				// Special case where the minLength is its default value
 				// and the command line is: |maxStringCount minLength maxLength|
 				// minLength(s[1]) can be removed since we can accomplish
 				// the same effect by just putting maxLength
 				command = s[0] + " " + s[2];
 			} else if (s.length == 2) {
-				// special case where the maxLength has been removed but
+				// Special case where the maxLength has been removed but
 				// the minLength hasn't. To avoid having the constructor
 				// interpret the minLength as the maxLength, we have to
 				// append a TMS.DEFAULT
@@ -3117,7 +3113,7 @@ public class TMS {
 		}
 
 		StringBuilder name = new StringBuilder(fileName.charAt(0));
-		for (int i = 1; i < fileName.length(); i++) {
+		for (int i = 1; i != fileName.length(); ++i) {
 			char c = fileName.charAt(i);
 			if (c != '.' && c != '-' && c != '_') {
 				name.append(c);
@@ -3181,7 +3177,7 @@ public class TMS {
 		String s = null;
 
 		if (args != null) {
-			for (int i = 0; i < args.length; i++) {
+			for (int i = 0; i != args.length; ++i) {
 				if (args[i] == null || args[i].isEmpty()) {
 					continue;
 				}
@@ -3190,17 +3186,17 @@ public class TMS {
 					save = save || s.equals(TMS.SAVE);
 					stdin = stdin || s.equals(TMS.STDIN);
 					if (s.equals(TMS.TRUE_1) || s.equals(TMS.TRUE_2)) {
-						eval++;
+						++eval;
 					} else if (s.equals(TMS.FALSE_1) || s.equals(TMS.FALSE_2)) {
-						eval--;
+						--eval;
 					}
 				}
 
 				if (!success && !stdin) {
-					try { // if no exception is thrown then the result is necessarily true
+					try { // If no exception is thrown then the result is necessarily true
 						success = (machine = new TMS(args[i], true)) != null;
 					} catch (FileNotFoundException ex) {
-						try { // if no exception is thrown then the result is necessarily true
+						try { // If no exception is thrown then the result is necessarily true
 							success = (machine = new TMS((args[i] + ".txt"), true)) != null;
 						} catch (FileNotFoundException ex1) {
 						}
@@ -3208,10 +3204,10 @@ public class TMS {
 				}
 
 				if (!success && !stdin && TMS.DEFAULT_FILE_NAME.equals(s)) {
-					try { // if no exception is thrown then the result is necessarily true
+					try { // If no exception is thrown then the result is necessarily true
 						success = (machine = new TMS(TMS.DEFAULT_FILE_NAME, true)) != null;
 					} catch (FileNotFoundException ex) {
-						try { // if no exception is thrown then the result is necessarily true
+						try { // If no exception is thrown then the result is necessarily true
 							success = (machine = new TMS((TMS.DEFAULT_FILE_NAME + ".txt"), true)) != null;
 						} catch (FileNotFoundException ex1) {
 						}
@@ -3219,7 +3215,7 @@ public class TMS {
 				}
 			}
 		}
-		machine = !success ? new TMS() : machine;
+		machine = !success ? new TMS(System.in) : machine;
 		machine.simulate(eval >= 0);
 
 		if (save) {
@@ -3262,7 +3258,7 @@ public class TMS {
 		return TMS.main(m, null, false);
 	}
 
-	// the version of main called by the Java compiler
+	// the version of main called by the JVM
 	public static void main(String[] args) throws IllegalArgumentException {
 		TMS.main(null, args, false);
 	}
