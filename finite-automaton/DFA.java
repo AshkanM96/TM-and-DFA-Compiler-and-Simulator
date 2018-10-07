@@ -16,9 +16,9 @@ import java.util.regex.Pattern;
  */
 public class DFA {
 	/*
-	 * for simplicity, all methods only throw IllegalArgumentException so that only one type of
+	 * For simplicity, all methods only throw IllegalArgumentException so that only one type of
 	 * exception need be handled but in general, it's better practice to throw other types of exceptions
-	 * when appropriate such as NullPointerException, IllegalStateException and etc.
+	 * when appropriate such as NullPointerException, IllegalStateException, and etc.
 	 */
 
 	public static final char DELIMITER_CHAR = ' ';
@@ -39,7 +39,7 @@ public class DFA {
 	private boolean[] accepting;
 	// next[i][j] = delta(state i, input char at index j)
 	private int[][] nextState;
-	// array used to keep track of defined transitions
+	// Array used to keep track of defined transitions
 	private boolean[][] defined;
 	private int totalNumTransitions, numDefinedTransitions;
 	private int[] stateNumDefined;
@@ -61,7 +61,7 @@ public class DFA {
 	 */
 	private boolean count, checkStringsCount = true;
 	/*
-	 * maps testString to accept:stepCount. always construct results with initialCapacity of
+	 * Maps testString to accept:stepCount. Always construct results with initialCapacity of
 	 * maxStringCount so that the need for resizing, rehashing, ... is greatly reduced
 	 */
 	private HashMap<ArrayList<Integer>, String> results;
@@ -90,7 +90,7 @@ public class DFA {
 	private int lineNumber;
 
 	/*
-	 * save the result of toString() and getComments() in savedStr and savedCom respectively. also keep
+	 * Save the result of toString() and getComments() in savedStr and savedCom respectively. Also keep
 	 * track of whether the result of actually running toString() and getComments() has changed in
 	 * strChange and comChange (respectively) as to decide whether to run the method or just return the
 	 * saved value.
@@ -121,12 +121,13 @@ public class DFA {
 		return this.numStates;
 	}
 
+	@SuppressWarnings("null")
 	public int setNumStates(int numStates, boolean copyValidTransitions) throws IllegalArgumentException {
 		if (this.getNumStates() == this.validateNumStates(numStates)) {
 			return this.getNumStates();
 		}
 
-		// save all defined transitions
+		// Save all defined transitions
 		String[] definedTransitions = copyValidTransitions ? this.getDefinedTransitions() : null;
 
 		this.numStates = numStates;
@@ -136,21 +137,21 @@ public class DFA {
 		this.stateNumDefined = new int[numStates];
 		this.initializeTransitions();
 
-		if (definedTransitions != null) { // i.e. copyValidTransitions
-			// save exception causes for later restoration
+		if (copyValidTransitions) {
+			// Save exception causes for later restoration
 			String oldCause = this.cause, oldStaticCause = DFA.staticCause;
 
 			Object[] tokens = null;
-			for (int i = 0; i < definedTransitions.length; i++) {
+			for (int i = 0; i != definedTransitions.length; ++i) {
 				tokens = this.validateTransition(definedTransitions[i]);
 				try {
 					this.putTransition((int) tokens[0], (String) tokens[1], (int) tokens[2]);
 				} catch (IllegalArgumentException ex) {
-					// transition described by tokens, is no longer valid therefore nothing else to do
+					// Transition described by tokens, is no longer valid therefore nothing else to do
 				}
 			}
 
-			// restore saved exception causes
+			// Restore saved exception causes
 			this.cause = oldCause;
 			DFA.staticCause = oldStaticCause;
 		}
@@ -323,7 +324,7 @@ public class DFA {
 
 		Arrays.sort(acceptingStates);
 		boolean[] accepting = new boolean[this.getNumStates()];
-		for (int i = 0; i < numAcceptingStates; i++) {
+		for (int i = 0; i != numAcceptingStates; ++i) {
 			int acceptState = acceptingStates[i];
 			if (!this.isValidState(acceptState)) {
 				this.cause = "Given accept state index(" + acceptState + ") isn't in the range of "
@@ -358,7 +359,7 @@ public class DFA {
 	public int[] getAcceptingStates() {
 		int[] result = new int[this.getNumAcceptingStates()];
 		int index = 0;
-		for (int i = 0; i < this.getNumStates(); i++) {
+		for (int i = 0; i != this.getNumStates(); ++i) {
 			if (this.accepting[i]) {
 				result[index++] = i;
 			}
@@ -372,7 +373,7 @@ public class DFA {
 		System.arraycopy(inputAlphabet, 0, this.inputAlphabet, 0, inputAlphabetSize);
 
 		this.inputIndex = new HashMap<String, Integer>(inputAlphabetSize);
-		for (int i = 0; i < inputAlphabetSize; i++) {
+		for (int i = 0; i != inputAlphabetSize; ++i) {
 			this.inputIndex.put(this.inputAlphabet[i], i);
 		}
 
@@ -392,7 +393,7 @@ public class DFA {
 	}
 
 	public boolean isValidAlphabet(int inputAlphabetSize, String[] inputAlphabet) {
-		try { // if no exception is thrown then the result is necessarily true
+		try { // If no exception is thrown then the result is necessarily true
 			return (this.validateAlphabet(inputAlphabetSize, inputAlphabet) != null);
 		} catch (IllegalArgumentException ex) {
 			return false;
@@ -409,7 +410,7 @@ public class DFA {
 
 		HashMap<String, Integer> inputIndex = new HashMap<String, Integer>();
 		String inputChar;
-		for (int i = 0; i < inputAlphabetSize; i++) {
+		for (int i = 0; i != inputAlphabetSize; ++i) {
 			if ((inputChar = inputAlphabet[i]) == null) {
 				this.cause = "Given input alphabet isn't valid since it contains null at index " + i + ".";
 				this.illegalArg();
@@ -453,15 +454,15 @@ public class DFA {
 			return false;
 		}
 
-		for (int i = 0; i < s.length; i++) {
+		for (int i = 0; i != s.length; ++i) {
 			if (s[i] == null) {
 				return false;
 			}
 		}
 
 		String shorter, longer;
-		for (int i = 0; i < s.length; i++) {
-			for (int j = i + 1; j < s.length; j++) {
+		for (int i = 0; i != s.length; ++i) {
+			for (int j = i + 1; j != s.length; ++j) {
 				if (s[i].length() > s[j].length()) {
 					shorter = s[j];
 					longer = s[i].substring(0, s[j].length());
@@ -500,7 +501,7 @@ public class DFA {
 	public int[][] getNextState() {
 		int n = this.getNumStates(), s = this.getInputAlphabetSize();
 		int[][] result = new int[n][s];
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i != n; ++i) {
 			System.arraycopy(this.nextState[i], 0, result[i], 0, s);
 		}
 		return result;
@@ -514,7 +515,7 @@ public class DFA {
 	public boolean[][] getDefined() {
 		int n = this.getNumStates(), s = this.getInputAlphabetSize();
 		boolean[][] result = new boolean[n][s];
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i != n; ++i) {
 			System.arraycopy(this.defined[i], 0, result[i], 0, s);
 		}
 		return result;
@@ -574,7 +575,7 @@ public class DFA {
 	public String[] getTransitions(int initialState, boolean format, boolean print) throws IllegalArgumentException {
 		this.validateState(initialState);
 		String[] result = new String[this.getInputAlphabetSize()];
-		for (int i = 0; i < result.length; i++) {
+		for (int i = 0; i != result.length; ++i) {
 			result[i] = this.getTransition(initialState, i, format);
 			System.out.print(print ? (result[i] + '\n') : "");
 		}
@@ -600,8 +601,8 @@ public class DFA {
 	public String[] getTransitions(boolean format, boolean print) {
 		String[] result = new String[this.getTotalNumTransitions()];
 		int index = 0;
-		for (int i = 0; i < this.getNumStates(); i++) {
-			for (int j = 0; j < this.getInputAlphabetSize(); j++) {
+		for (int i = 0; i != this.getNumStates(); ++i) {
+			for (int j = 0; j != this.getInputAlphabetSize(); ++j) {
 				result[index++] = this.getTransition(i, j, format);
 				System.out.print(print ? (result[index - 1] + '\n') : "");
 			}
@@ -659,17 +660,17 @@ public class DFA {
 		int length = 0, s = this.getInputAlphabetSize();
 		String transition;
 		String[] temp = new String[s];
-		for (int i = 0; i < s; i++) {
+		for (int i = 0; i != s; ++i) {
 			transition = null;
 			if (this.defined[initialState][i]) {
 				transition = this.getTransition(initialState, i, format);
-				length++;
+				++length;
 			}
 			temp[i] = transition;
 		}
 
 		String[] result = new String[length];
-		for (int i = 0, index = 0; index < length; i++) {
+		for (int i = 0, index = 0; index != length; ++i) {
 			if ((transition = temp[i]) != null) {
 				result[index++] = transition;
 				System.out.print(print ? (transition + '\n') : "");
@@ -697,8 +698,8 @@ public class DFA {
 	public String[] getDefinedTransitions(boolean format, boolean print) {
 		int index = 0, numDef = this.getNumDefinedTransitions();
 		String[] result = new String[numDef];
-		for (int i = 0; i < this.getNumStates() && index < numDef; i++) {
-			for (int j = 0; j < this.getInputAlphabetSize() && index < numDef; j++) {
+		for (int i = 0; i != this.getNumStates() && index != numDef; ++i) {
+			for (int j = 0; j != this.getInputAlphabetSize() && index != numDef; ++j) {
 				if (this.defined[i][j]) {
 					result[index++] = this.getTransition(i, j, format);
 					System.out.print(print ? (result[index - 1] + '\n') : "");
@@ -794,7 +795,7 @@ public class DFA {
 			int max = Math.max(minLength, maxLength), start = this.isConstructing ? max : this.getInitialLength();
 			int s = this.getInputAlphabetSize(), estimateStringCount;
 
-			// in general estimateStringCount can be calculated from
+			// In general estimateStringCount can be calculated from
 			// (s^(max + 1) - s^start) / (s - 1)
 			if (this.isConstructing) {
 				// start == max and as such the expression simplifies to just
@@ -803,7 +804,7 @@ public class DFA {
 				estimateStringCount = ((int) Math.pow(s, start));
 			} else {
 				int high = 1, low = 1;
-				for (int i = 0; i < max + 1; i++) {
+				for (int i = 0; i != max + 1; ++i) {
 					high *= s;
 					low *= i < start ? s : 1;
 				}
@@ -840,7 +841,7 @@ public class DFA {
 		return this.minLength;
 	}
 
-	// even if it returns true, minLength isn't necessarily valid since
+	// Even if it returns true, minLength isn't necessarily valid since
 	// initialLength hasn't been taken into account
 	public static boolean isValidMinLength(int minLength) {
 		return (minLength >= 0);
@@ -878,12 +879,12 @@ public class DFA {
 		String minChar = this.inputAlphabet[0];
 		if (format) {
 			result.append("\"" + minChar);
-			for (int i = 1; i < this.getMinLength(); i++) {
+			for (int i = 1; i != this.getMinLength(); ++i) {
 				result.append(" " + minChar);
 			}
 			result.append("\"");
 		} else {
-			for (int i = 0; i < this.getMinLength(); i++) {
+			for (int i = 0; i != this.getMinLength(); ++i) {
 				result.append(minChar);
 			}
 		}
@@ -897,7 +898,7 @@ public class DFA {
 	public ArrayList<Integer> getMinArray() {
 		int minLength = this.getMinLength();
 		ArrayList<Integer> result = new ArrayList<Integer>(minLength);
-		for (int i = 0; i < minLength; i++) {
+		for (int i = 0; i != minLength; ++i) {
 			result.add(0);
 		}
 		return result;
@@ -907,7 +908,7 @@ public class DFA {
 		return this.maxLength;
 	}
 
-	// even if it returns true, maxLength isn't necessarily valid since
+	// Even if it returns true, maxLength isn't necessarily valid since
 	// initialLength hasn't been taken into account
 	public static boolean isValidMaxLength(int maxLength) {
 		return (maxLength >= 0);
@@ -945,12 +946,12 @@ public class DFA {
 		String maxChar = this.inputAlphabet[this.getMaxInputIndex()];
 		if (format) {
 			result.append("\"" + maxChar);
-			for (int i = 1; i < this.getMaxLength(); i++) {
+			for (int i = 1; i != this.getMaxLength(); ++i) {
 				result.append(" " + maxChar);
 			}
 			result.append("\"");
 		} else {
-			for (int i = 0; i < this.getMaxLength(); i++) {
+			for (int i = 0; i != this.getMaxLength(); ++i) {
 				result.append(maxChar);
 			}
 		}
@@ -964,7 +965,7 @@ public class DFA {
 	public ArrayList<Integer> getMaxArray() {
 		int maxLength = this.getMaxLength(), index = this.getMaxInputIndex();
 		ArrayList<Integer> result = new ArrayList<Integer>(maxLength);
-		for (int i = 0; i < maxLength; i++) {
+		for (int i = 0; i != maxLength; ++i) {
 			result.add(index);
 		}
 		return result;
@@ -980,7 +981,7 @@ public class DFA {
 
 	private String setLengthRange(int minLength, int maxLength, boolean checkStringsCount)
 			throws IllegalArgumentException {
-		// save field values in case of restoring
+		// Save field values in case of restoring
 		int savedMin = this.getMinLength(), savedMax = this.getMaxLength();
 		boolean savedCheckStringsCount = this.checkStringsCount, savedStrChange = this.strChange;
 		try {
@@ -1009,7 +1010,7 @@ public class DFA {
 	}
 
 	public Object[] setRangeString(int minLength, int maxLength, String initialString) throws IllegalArgumentException {
-		// save field values in case of restoring
+		// Save field values in case of restoring
 		boolean savedIsConstructing = this.isConstructing, savedStrChange = this.strChange;
 		int savedMin = this.getMinLength(), savedMax = this.getMaxLength();
 		try {
@@ -1024,10 +1025,10 @@ public class DFA {
 		Object[] result = null;
 		ArrayList<Integer> a = null;
 		try {
-			// check if testString is defined over input alphabet
+			// Check if testString is defined over input alphabet
 			a = this.validateTestString(initialString);
 		} catch (IllegalArgumentException ex) {
-			// since it isn't defined, check if isDefault
+			// Since it isn't defined, check if isDefault
 			if (this.isConstructing && DFA.isDefault(initialString)) {
 				result = this.setInitialArray(this.getMinArray(), false);
 			} else {
@@ -1041,7 +1042,7 @@ public class DFA {
 		}
 		try {
 			if (a != null) {
-				// since it is defined, store it in the class variable
+				// Since it is defined, store it in the class variable
 				result = this.setInitialArray(a, false);
 			}
 			this.validateStringsCount(this.getMinLength(), this.getMaxLength());
@@ -1058,7 +1059,7 @@ public class DFA {
 
 	public Object[] setRangeArray(int minLength, int maxLength, ArrayList<Integer> initialArray)
 			throws IllegalArgumentException {
-		// save field values in case of restoring
+		// Save field values in case of restoring
 		boolean savedIsConstructing = this.isConstructing, savedStrChange = this.strChange;
 		int savedMin = this.getMinLength(), savedMax = this.getMaxLength();
 		try {
@@ -1073,7 +1074,7 @@ public class DFA {
 		Object[] result = null;
 		String s = null;
 		try {
-			// check if testString is defined over input alphabet
+			// Check if testString is defined over input alphabet
 			s = this.validateTestString(initialArray);
 		} catch (IllegalArgumentException ex) {
 			if (this.isConstructing) {
@@ -1089,7 +1090,7 @@ public class DFA {
 		}
 		try {
 			if (s != null) {
-				// since it is defined, store it in the class variable
+				// Since it is defined, store it in the class variable
 				result = this.setInitialArray(initialArray, false);
 			}
 			this.validateStringsCount(this.getMinLength(), this.getMaxLength());
@@ -1111,7 +1112,7 @@ public class DFA {
 	private Object[] setInitialString(String initialString, boolean validate) throws IllegalArgumentException {
 		ArrayList<Integer> a = validate ? this.validateTestString(initialString) : this.toArray(initialString);
 		if (initialString.equals(this.getInitialString())) {
-			// impossible to happen when constructing since this.initialString is null
+			// Impossible to happen when constructing since this.initialString is null
 			return this.getInitialStringRepresentations();
 		}
 
@@ -1151,7 +1152,7 @@ public class DFA {
 			this.isSimulating = false;
 		}
 		if (s.equals(this.getInitialString())) {
-			// impossible to happen when constructing since this.initialString is null
+			// Impossible to happen when constructing since this.initialString is null
 			return this.getInitialStringRepresentations();
 		}
 
@@ -1191,10 +1192,9 @@ public class DFA {
 		}
 
 		String check = s;
-		int i = 1, index;
-		while (i <= check.length()) {
+		for (int i = 1, index; i <= check.length(); /* Update inside. */) {
 			if ((index = this.inputCharIndexOf(check.substring(0, i))) == -1) {
-				i++;
+				++i;
 			} else {
 				a.add(index);
 				if (i < check.length()) {
@@ -1220,12 +1220,12 @@ public class DFA {
 		StringBuilder output = new StringBuilder("");
 		if (format) {
 			output.append("\"" + this.inputAlphabet[testString.get(0)]);
-			for (int i = 1; i < testString.size(); i++) {
+			for (int i = 1; i != testString.size(); ++i) {
 				output.append(" " + this.inputAlphabet[testString.get(i)]);
 			}
 			output.append("\"");
 		} else {
-			for (int i = 0; i < testString.size(); i++) {
+			for (int i = 0; i != testString.size(); ++i) {
 				output.append(this.inputAlphabet[testString.get(i)]);
 			}
 		}
@@ -1372,7 +1372,7 @@ public class DFA {
 		this.offerComments(comments);
 		this.isConstructing = false;
 		this.cause = DFA.staticCause = null;
-		DFA.machineCount++;
+		++DFA.machineCount;
 	}
 
 	public DFA(int numStates, int inputAlphabetSize, String[] inputAlphabet, int numAcceptingStates, int[] accepting,
@@ -1428,7 +1428,7 @@ public class DFA {
 		this(DFA.MIN_NUM_STATES, inputAlphabetSize, inputAlphabet);
 	}
 
-	// copy constructor
+	// Copy constructor
 	public DFA(DFA other) throws NullPointerException {
 		this(other.getNumStates(), other.getInputAlphabetSize(), other.getInputAlphabet(),
 				other.getNumAcceptingStates(), other.getAcceptingStates(), other.getNumDefinedTransitions(),
@@ -1440,13 +1440,13 @@ public class DFA {
 		return new DFA(this);
 	}
 
-	// by creating a copy from calling the toString method,
+	// By creating a copy from calling the toString method,
 	// the value of toString is saved for this instance as well
 	public DFA getStringCopy() {
 		return new DFA(this.toString());
 	}
 
-	// creates a deterministic finite automata by reading it (in YUFAFF) from in
+	// Creates a deterministic finite automata by reading it (in YUFAFF) from in
 	@SuppressWarnings("null")
 	public DFA(Scanner in) throws IllegalArgumentException {
 		this.isScanning = this.isConstructing = true;
@@ -1461,9 +1461,9 @@ public class DFA {
 				DFA.staticCause = "Given machine description didn't have a first line.";
 				DFA.illegalArg(DFA.getStaticCause());
 			}
-			// process first line
+			// Process first line
 			String line = in.nextLine();
-			this.lineNumber++;
+			++this.lineNumber;
 			String[] s = line.split(DFA.DELIMITER_STRING);
 			if (s.length != DFA.LINE_1_NUM_ENTRIES || DFA.countDelimiters(line) != s.length - 1) {
 				DFA.staticCause = "Given first line(" + line + ") isn't valid.";
@@ -1518,9 +1518,9 @@ public class DFA {
 				DFA.staticCause = "Given machine description didn't have a second line.";
 				DFA.illegalArg(DFA.getStaticCause());
 			}
-			// process second line
+			// Process second line
 			line = in.nextLine();
-			this.lineNumber++;
+			++this.lineNumber;
 			s = line.split(DFA.DELIMITER_STRING);
 			if (s.length != inputAlphabetSize || DFA.countDelimiters(line) != s.length - 1) {
 				DFA.staticCause = "Given second line(" + line + ") isn't valid.";
@@ -1537,9 +1537,9 @@ public class DFA {
 				DFA.staticCause = "Given machine description didn't have a third line.";
 				DFA.illegalArg(DFA.getStaticCause());
 			}
-			// process third line
+			// Process third line
 			line = in.nextLine();
-			this.lineNumber++;
+			++this.lineNumber;
 			int[] accepting = new int[numAcceptingStates];
 			if (numAcceptingStates == 0) {
 				if (!line.isEmpty()) {
@@ -1553,7 +1553,7 @@ public class DFA {
 					DFA.illegalArg(DFA.getStaticCause());
 				}
 
-				for (int i = 0; i < numAcceptingStates; i++) {
+				for (int i = 0; i != numAcceptingStates; ++i) {
 					try {
 						accepting[i] = Integer.parseInt(s[i]);
 					} catch (NumberFormatException ex) {
@@ -1570,9 +1570,9 @@ public class DFA {
 				this.illegalArg();
 			}
 
-			// process transition lines
+			// Process transition lines
 			String[] transitions = new String[numTransitions];
-			for (int i = 0; i < numTransitions; i++) {
+			for (int i = 0; i != numTransitions; ++i) {
 				if (!in.hasNextLine()) {
 					DFA.staticCause = "Given machine description didn't have line " + (i + 4) + ".";
 					DFA.illegalArg(DFA.getStaticCause());
@@ -1589,10 +1589,10 @@ public class DFA {
 			int readMaxStringCount = DFA.DEFAULT_MAX_STRING_COUNT, readMinLength = DFA.DEFAULT_MIN_LENGTH,
 					readMaxLength = DFA.DEFAULT_MAX_LENGTH;
 			String readInitialString = DFA.DEFAULT_INITIAL_STRING;
-			// process command line
+			// Process command line
 			if (in.hasNextLine()) {
 				line = in.nextLine();
-				this.lineNumber++;
+				++this.lineNumber;
 				if (!line.isEmpty()) {
 					s = line.split(DFA.DELIMITER_STRING);
 					if (s.length > DFA.COMMAND_LINE_MAX_NUM_ENTRIES || DFA.countDelimiters(line) != s.length - 1) {
@@ -1645,7 +1645,7 @@ public class DFA {
 
 							readMinLength = Math.min(first, second);
 							readMaxLength = Math.max(first, second);
-							for (int i = 0; i < readMinLength; i++) {
+							for (int i = 0; i < readMinLength; ++i) {
 								readInitialString += this.inputAlphabet[0];
 							}
 						}
@@ -1662,26 +1662,26 @@ public class DFA {
 				this.illegalArg();
 			}
 
-			// process comments
+			// Process comments
 			this.setIncludeComments(DFA.DEFAULT_INCLUDE_COMMENTS);
 			StringBuilder comments = new StringBuilder("");
 			while (in.hasNextLine()) {
 				comments.append(in.nextLine() + '\n');
-				this.lineNumber++;
+				++this.lineNumber;
 			}
-			in.close(); // close upon success
-			// trim last extra '\n' from comments if it exists
+			in.close(); // Close upon success
+			// Trim last extra '\n' from comments if it exists
 			this.offerComments(comments.length() == 0 ? comments : comments.subSequence(0, comments.length() - 1));
 
 			this.isScanning = this.isConstructing = false;
 			this.cause = DFA.staticCause = null;
-			DFA.machineCount++;
+			++DFA.machineCount;
 		} catch (IllegalArgumentException ex) {
-			in.close(); // close upon failure to avoid resource leak
+			in.close(); // Close upon failure to avoid resource leak
 			ex.printStackTrace();
 			throw new IllegalArgumentException(ex.getMessage());
 		} catch (IllegalStateException ex) {
-			// no need to close scanner since it's already closed
+			// No need to close scanner since it's already closed
 			ex.printStackTrace();
 			DFA.staticCause = "Given scanner is closed.";
 			DFA.illegalArg(DFA.getStaticCause());
@@ -1709,10 +1709,6 @@ public class DFA {
 		this(new Scanner(s));
 	}
 
-	public DFA() throws IllegalArgumentException {
-		this(System.in);
-	}
-
 	@SuppressWarnings("null")
 	public String[] putTransitions(int numTransitions, String[] transitions, boolean[] replace)
 			throws IllegalArgumentException {
@@ -1727,10 +1723,10 @@ public class DFA {
 			this.illegalArg();
 		}
 
-		for (int i = 0; i < numTransitions; i++) {
+		for (int i = 0; i != numTransitions; ++i) {
 			String line = transitions[i];
-			// increment lineNumber regardless since it's a private variable with no accessor
-			this.lineNumber++;
+			// Increment lineNumber regardless since it's a private variable with no accessor
+			++this.lineNumber;
 			if (line == null) {
 				this.cause = "Given transitions array isn't valid since it contains null at index " + i + ".";
 				this.illegalArg();
@@ -1783,8 +1779,8 @@ public class DFA {
 		this.nextState[initialState][readCharIndex] = finalState;
 		if (!this.defined[initialState][readCharIndex]) {
 			this.defined[initialState][readCharIndex] = true;
-			this.numDefinedTransitions++;
-			this.stateNumDefined[initialState]++;
+			++this.numDefinedTransitions;
+			++this.stateNumDefined[initialState];
 			this.resetRun();
 		}
 		this.strChange = true;
@@ -1805,7 +1801,7 @@ public class DFA {
 	}
 
 	public boolean isValidTransition(int initialState, String readChar, int finalState) {
-		try { // if no exception is thrown then the result is necessarily true
+		try { // If no exception is thrown then the result is necessarily true
 			return (this.validateTransition(initialState, readChar, finalState) != null);
 		} catch (IllegalArgumentException ex) {
 			return false;
@@ -1881,15 +1877,15 @@ public class DFA {
 
 	private String resetTransition(int initialState, int readCharIndex) {
 		String transition = this.getTransition(initialState, readCharIndex, false);
-		// set default value
+		// Set default value
 		this.nextState[initialState][readCharIndex] = initialState;
 		return transition;
 	}
 
 	private void finalizeReset(int initialState, int readCharIndex) {
 		this.defined[initialState][readCharIndex] = false;
-		this.numDefinedTransitions--;
-		this.stateNumDefined[initialState]--;
+		--this.numDefinedTransitions;
+		--this.stateNumDefined[initialState];
 		this.resetRun();
 		this.strChange = true;
 	}
@@ -1906,7 +1902,7 @@ public class DFA {
 	public String[] resetTransitions(int initialState) throws IllegalArgumentException {
 		this.validateState(initialState);
 		String[] result = new String[this.getInputAlphabetSize()];
-		for (int i = 0; i < result.length; i++) {
+		for (int i = 0; i != result.length; ++i) {
 			result[i] = this.resetTransition(initialState, i);
 			if (this.defined[initialState][i]) {
 				this.finalizeReset(initialState, i);
@@ -1918,9 +1914,9 @@ public class DFA {
 	public String[] resetTransitions() {
 		String[] result = new String[this.getTotalNumTransitions()];
 		int index = 0;
-		for (int i = 0; i < this.getNumStates(); i++) {
+		for (int i = 0; i != this.getNumStates(); ++i) {
 			this.stateNumDefined[i] = 0;
-			for (int j = 0; j < this.getInputAlphabetSize(); j++) {
+			for (int j = 0; j != this.getInputAlphabetSize(); ++j) {
 				result[index++] = this.resetTransition(i, j);
 				this.defined[i][j] = false;
 			}
@@ -1948,18 +1944,18 @@ public class DFA {
 		int length = 0, s = this.getInputAlphabetSize();
 		String transition;
 		String[] temp = new String[s];
-		for (int i = 0; i < s && this.stateNumDefined[initialState] != 0; i++) {
+		for (int i = 0; i != s && this.stateNumDefined[initialState] != 0; ++i) {
 			transition = null;
 			if (this.defined[initialState][i]) {
 				transition = this.resetTransition(initialState, i);
 				this.finalizeReset(initialState, i);
-				length++;
+				++length;
 			}
 			temp[i] = transition;
 		}
 
 		String[] result = new String[length];
-		for (int i = 0, index = 0; index < length; i++) {
+		for (int i = 0, index = 0; index != length; ++i) {
 			if ((transition = temp[i]) != null) {
 				result[index++] = transition;
 			}
@@ -1970,8 +1966,8 @@ public class DFA {
 	public String[] resetDefinedTransitions() {
 		String[] result = new String[this.getNumDefinedTransitions()];
 		int index = 0;
-		for (int i = 0; i < this.getNumStates() && this.getNumDefinedTransitions() != 0; i++) {
-			for (int j = 0; j < this.getInputAlphabetSize() && this.getNumDefinedTransitions() != 0; j++) {
+		for (int i = 0; i != this.getNumStates() && this.getNumDefinedTransitions() != 0; ++i) {
+			for (int j = 0; j != this.getInputAlphabetSize() && this.getNumDefinedTransitions() != 0; ++j) {
 				if (this.defined[i][j]) {
 					result[index++] = this.resetTransition(i, j);
 					this.finalizeReset(i, j);
@@ -1986,9 +1982,9 @@ public class DFA {
 		this.nextState = new int[n][s];
 		this.defined = new boolean[n][s];
 		this.numDefinedTransitions = 0;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < s; j++) {
-				this.nextState[i][j] = i; // set default value
+		for (int i = 0; i != n; ++i) {
+			for (int j = 0; j != s; ++j) {
+				this.nextState[i][j] = i; // Set default value
 			}
 		}
 		this.strChange = true;
@@ -2002,7 +1998,7 @@ public class DFA {
 		}
 
 		int count = 0;
-		for (int i = 0; i < s.length(); i++) {
+		for (int i = 0; i != s.length(); ++i) {
 			count += s.charAt(i) == DFA.DELIMITER_CHAR ? 1 : 0;
 		}
 		return count;
@@ -2017,16 +2013,16 @@ public class DFA {
 		if (s.length() <= 1) {
 			return lower;
 		} else if (s.substring(1).equals(lower.substring(1))) {
-			return lower; // matches [A-Z][a-z]*
+			return lower; // Matches [A-Z][a-z]*
 		} else if (s.equals(s.toUpperCase())) {
-			return lower; // matches [A-Z]+
+			return lower; // Matches [A-Z]+
 		}
 
 		return null;
 	}
 
 	public static boolean isValidBoolean(String s) {
-		try { // if no exception is thrown then the result is necessarily true
+		try { // If no exception is thrown then the result is necessarily true
 			return (DFA.parseBoolean(s) || true);
 		} catch (IllegalArgumentException ex) {
 			return false;
@@ -2078,7 +2074,7 @@ public class DFA {
 		}
 
 		this.acceptCount = this.rejectCount = 0;
-		// maps testString to accept:stepCount
+		// Maps testString to accept:stepCount
 		this.results = new HashMap<ArrayList<Integer>, String>(this.getMaxStringCount());
 
 		long beforeTime = System.nanoTime(), elapsedTime;
@@ -2160,22 +2156,22 @@ public class DFA {
 	private boolean incrementCount(boolean accept) {
 		if (this.count) {
 			if (accept) {
-				this.acceptCount++;
+				++this.acceptCount;
 			} else {
-				this.rejectCount++;
+				++this.rejectCount;
 			}
 		}
 		return accept;
 	}
 
-	// checks whether machine accepts the string described by testString
+	// Checks whether machine accepts the string described by testString
 	public boolean accept(ArrayList<Integer> testString, int state) throws IllegalArgumentException {
 		if (!this.isSimulating) {
 			this.validateState(state);
 			this.validateTestString(testString);
 		}
 
-		for (int i = 0; i < testString.size(); i++) {
+		for (int i = 0; i != testString.size(); ++i) {
 			state = this.nextState[state][testString.get(i)];
 		}
 		return this.accepting[state];
@@ -2193,7 +2189,7 @@ public class DFA {
 		if (pos != -1) {
 			testString.set(pos, testString.get(pos) + 1);
 		} else {
-			testString.add(0); // only when testString is the max string of its length
+			testString.add(0); // Only when testString is the max string of its length
 		}
 		return testString;
 	}
@@ -2227,7 +2223,7 @@ public class DFA {
 
 	public void printMachine() {
 		System.out.print("\nInput alphabet:");
-		for (int i = 0; i < this.getInputAlphabetSize(); i++) {
+		for (int i = 0; i != this.getInputAlphabetSize(); ++i) {
 			System.out.print(" " + this.inputAlphabet[i]);
 		}
 
@@ -2237,7 +2233,7 @@ public class DFA {
 			System.out.print("\nEvery state is an accept state.");
 		} else {
 			System.out.print("\nAccepting states:");
-			for (int i = 0; i < this.getNumStates(); i++) {
+			for (int i = 0; i != this.getNumStates(); ++i) {
 				if (this.accepting[i]) {
 					System.out.print(" " + i);
 				}
@@ -2288,7 +2284,7 @@ public class DFA {
 	}
 
 	/*
-	 * throw an IllegalArgumentException with padding "\n" so that the exception message appears
+	 * Throw an IllegalArgumentException with padding "\n" so that the exception message appears
 	 * separately on the System.err PrintStream.
 	 */
 	private static void illegalArg(String cause) throws IllegalArgumentException {
@@ -2299,7 +2295,7 @@ public class DFA {
 		DFA.illegalArg(this.getCause());
 	}
 
-	// recursively add a "," after every 3 characters of s starting from the right
+	// Recursively add a "," after every 3 characters of s starting from the right
 	public static String comma(String s) throws NullPointerException {
 		if (s.length() <= 3) {
 			return s;
@@ -2358,7 +2354,7 @@ public class DFA {
 		s.append(s.length() != 0 ? " and " : "");
 	}
 
-	// returns 0 for long values out of Integer bounds
+	// Returns 0 for long values out of Integer bounds
 	public static int safeCastLong2Int(long l) {
 		if (l >= Integer.MIN_VALUE && l <= Integer.MAX_VALUE) {
 			return ((int) l);
@@ -2393,14 +2389,14 @@ public class DFA {
 			return false;
 		}
 
-		for (int i = 0; i < this.getNumAcceptingStates(); i++) {
+		for (int i = 0; i != this.getNumAcceptingStates(); ++i) {
 			if (this.accepting[i] != other.accepting[i]) {
 				return false;
 			}
 		}
 
-		for (int i = 0; i < this.getNumStates(); i++) {
-			for (int j = 0; j < this.getInputAlphabetSize(); j++) {
+		for (int i = 0; i != this.getNumStates(); ++i) {
+			for (int j = 0; j != this.getInputAlphabetSize(); ++j) {
 				if (this.nextState[i][j] != other.nextState[i][j]) {
 					return false;
 				}
@@ -2434,32 +2430,31 @@ public class DFA {
 		}
 		StringBuilder output = new StringBuilder("");
 
-		// first line
+		// First line
 		output.append(this.getNumStates() + " " + this.getInputAlphabetSize() + " " + this.getNumAcceptingStates() + " "
 				+ this.getNumDefinedTransitions() + '\n');
 
-		// second line
-		for (int i = 0; i < this.getInputAlphabetSize(); i++) {
+		// Second line
+		for (int i = 0; i != this.getInputAlphabetSize(); ++i) {
 			output.append(this.inputAlphabet[i] + (i != this.getInputAlphabetSize() - 1 ? " " : ""));
 		}
 		output.append('\n');
 
-		// third line
-		int count = 0;
-		for (int i = 0; i < this.getNumStates(); i++) {
+		// Third line
+		for (int i = 0, count = 0; i != this.getNumStates(); ++i) {
 			if (this.accepting[i]) {
 				output.append(i + (++count != this.getNumAcceptingStates() ? " " : ""));
 			}
 		}
 		output.append('\n');
 
-		// transition lines
+		// Transition lines
 		String[] definedTransitions = this.getDefinedTransitions();
-		for (int i = 0; i < definedTransitions.length; i++) {
+		for (int i = 0; i != definedTransitions.length; ++i) {
 			output.append(definedTransitions[i] + '\n');
 		}
 
-		// command line
+		// Command line
 		StringBuilder command = new StringBuilder("");
 		if (this.getMaxStringCount() == 0) {
 			output.append("0");
@@ -2473,7 +2468,7 @@ public class DFA {
 			output.append(this.commandLine(command.toString()));
 		}
 
-		// comments
+		// Comments
 		output.append("\n" + (this.getIncludeComments() ? this.comments : ""));
 
 		this.strChange = false;
@@ -2483,19 +2478,19 @@ public class DFA {
 	private String commandLine(String command) {
 		while (command.endsWith(DFA.DEFAULT)) {
 			int index = command.lastIndexOf(DFA.DEFAULT);
-			// remove last occurrence of | default| or just |default|
+			// Remove last occurrence of | default| or just |default|
 			command = index != 0 ? command.substring(0, index - 1) : "";
 		}
 		if (!command.isEmpty()) {
 			String[] s = command.split(DFA.DELIMITER_STRING);
 			if (s.length == 3 && this.getMinLength() == DFA.DEFAULT_MIN_LENGTH) {
-				// special case where the minLength is its default value
+				// Special case where the minLength is its default value
 				// and the command line is: |maxStringCount minLength maxLength|
 				// minLength(s[1]) can be removed since we can accomplish
 				// the same effect by just putting maxLength
 				command = s[0] + " " + s[2];
 			} else if (s.length == 2) {
-				// special case where the maxLength has been removed but
+				// Special case where the maxLength has been removed but
 				// the minLength hasn't. To avoid having the constructor
 				// interpret the minLength as the maxLength, we have to
 				// append a DFA.DEFAULT
@@ -2511,7 +2506,7 @@ public class DFA {
 		}
 
 		StringBuilder name = new StringBuilder(fileName.charAt(0));
-		for (int i = 1; i < fileName.length(); i++) {
+		for (int i = 1; i != fileName.length(); ++i) {
 			char c = fileName.charAt(i);
 			if (c != '.' && c != '-' && c != '_') {
 				name.append(c);
@@ -2575,7 +2570,7 @@ public class DFA {
 		String s = null;
 
 		if (args != null) {
-			for (int i = 0; i < args.length; i++) {
+			for (int i = 0; i != args.length; ++i) {
 				if (args[i] == null || args[i].isEmpty()) {
 					continue;
 				}
@@ -2584,17 +2579,17 @@ public class DFA {
 					save = save || s.equals(DFA.SAVE);
 					stdin = stdin || s.equals(DFA.STDIN);
 					if (s.equals(DFA.TRUE_1) || s.equals(DFA.TRUE_2)) {
-						eval++;
+						++eval;
 					} else if (s.equals(DFA.FALSE_1) || s.equals(DFA.FALSE_2)) {
-						eval--;
+						--eval;
 					}
 				}
 
 				if (!success && !stdin) {
-					try { // if no exception is thrown then the result is necessarily true
+					try { // If no exception is thrown then the result is necessarily true
 						success = (machine = new DFA(args[i], true)) != null;
 					} catch (FileNotFoundException ex) {
-						try { // if no exception is thrown then the result is necessarily true
+						try { // If no exception is thrown then the result is necessarily true
 							success = (machine = new DFA((args[i] + ".txt"), true)) != null;
 						} catch (FileNotFoundException ex1) {
 						}
@@ -2602,10 +2597,10 @@ public class DFA {
 				}
 
 				if (!success && !stdin && DFA.DEFAULT_FILE_NAME.equals(s)) {
-					try { // if no exception is thrown then the result is necessarily true
+					try { // If no exception is thrown then the result is necessarily true
 						success = (machine = new DFA(DFA.DEFAULT_FILE_NAME, true)) != null;
 					} catch (FileNotFoundException ex) {
-						try { // if no exception is thrown then the result is necessarily true
+						try { // If no exception is thrown then the result is necessarily true
 							success = (machine = new DFA((DFA.DEFAULT_FILE_NAME + ".txt"), true)) != null;
 						} catch (FileNotFoundException ex1) {
 						}
@@ -2613,7 +2608,7 @@ public class DFA {
 				}
 			}
 		}
-		machine = !success ? new DFA() : machine;
+		machine = !success ? new DFA(System.in) : machine;
 		machine.simulate(eval >= 0);
 
 		if (save) {
@@ -2656,7 +2651,7 @@ public class DFA {
 		return DFA.main(m, null, false);
 	}
 
-	// the version of main called by the Java compiler
+	// The version of main called by the JVM
 	public static void main(String[] args) throws IllegalArgumentException {
 		DFA.main(null, args, false);
 	}
