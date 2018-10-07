@@ -309,7 +309,8 @@ public class DFA {
 
 	public boolean[] setAccepting(int numAcceptingStates, int[] acceptingStates) throws IllegalArgumentException {
 		boolean[] accepting = this.validateAccepting(numAcceptingStates, acceptingStates);
-		System.arraycopy(accepting, 0, this.accepting, 0, (this.numAcceptingStates = numAcceptingStates));
+		this.numAcceptingStates = numAcceptingStates;
+		System.arraycopy(accepting, 0, this.accepting, 0, accepting.length);
 		this.resetRun();
 		this.strChange = true;
 		return accepting;
