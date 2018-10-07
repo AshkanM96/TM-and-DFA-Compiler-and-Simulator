@@ -19,7 +19,7 @@ public class MutableInteger extends Number implements Comparable<MutableInteger>
 	}
 
 	/**
-	 * Construct a new MutableInteger object with the given value.
+	 * Construct a MutableInteger object with the given value.
 	 * 
 	 * @param other
 	 *            the given int value
@@ -29,7 +29,7 @@ public class MutableInteger extends Number implements Comparable<MutableInteger>
 	}
 
 	/**
-	 * Construct a new MutableInteger object with the given value.
+	 * Construct a MutableInteger object with the given value.
 	 * 
 	 * @param other
 	 *            the given Integer value
@@ -141,7 +141,7 @@ public class MutableInteger extends Number implements Comparable<MutableInteger>
 	 * @param other
 	 *            the given int value
 	 * 
-	 * @return <code>this.value == value</code>.
+	 * @return <code>this.value == other</code>.
 	 * 
 	 * @see #equals(Object)
 	 */

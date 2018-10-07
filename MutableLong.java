@@ -19,7 +19,7 @@ public class MutableLong extends Number implements Comparable<MutableLong> {
 	}
 
 	/**
-	 * Construct a new MutableLong object with the given value.
+	 * Construct a MutableLong object with the given value.
 	 * 
 	 * @param other
 	 *            the given long value
@@ -29,7 +29,7 @@ public class MutableLong extends Number implements Comparable<MutableLong> {
 	}
 
 	/**
-	 * Construct a new MutableLong object with the given value.
+	 * Construct a MutableLong object with the given value.
 	 * 
 	 * @param other
 	 *            the given Long value
@@ -141,7 +141,7 @@ public class MutableLong extends Number implements Comparable<MutableLong> {
 	 * @param other
 	 *            the given long value
 	 * 
-	 * @return <code>this.value == value</code>.
+	 * @return <code>this.value == other</code>.
 	 * 
 	 * @see #equals(Object)
 	 */
