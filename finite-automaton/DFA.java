@@ -35,7 +35,7 @@ public class DFA {
 	private static final Pattern WHITESPACE_PATTERN = Pattern.compile(DFA.WHITESPACE_REGEX);
 
 	private int numAcceptingStates;
-	// accepting holds which states are accepting states
+	// accepting[i] == state i is an accept state
 	private boolean[] accepting;
 	// next[i][j] = delta(state i, input char at index j)
 	private int[][] nextState;
@@ -300,8 +300,7 @@ public class DFA {
 			return state;
 		}
 
-		this.accepting[state] = accepting;
-		this.numAcceptingStates += accepting ? 1 : -1;
+		this.numAcceptingStates += (this.accepting[state] = accepting) ? 1 : -1;
 		this.resetRun();
 		this.strChange = true;
 		return state;
@@ -310,7 +309,7 @@ public class DFA {
 	public boolean[] setAccepting(int numAcceptingStates, int[] acceptingStates) throws IllegalArgumentException {
 		boolean[] accepting = this.validateAccepting(numAcceptingStates, acceptingStates);
 		this.numAcceptingStates = numAcceptingStates;
-		System.arraycopy(accepting, 0, this.accepting, 0, accepting.length);
+		System.arraycopy(accepting, 0, this.accepting, 0, this.accepting.length);
 		this.resetRun();
 		this.strChange = true;
 		return accepting;
@@ -325,8 +324,8 @@ public class DFA {
 
 		Arrays.sort(acceptingStates);
 		boolean[] accepting = new boolean[this.getNumStates()];
-		for (int i = 0; i != numAcceptingStates; ++i) {
-			int acceptState = acceptingStates[i];
+		for (int i = 0, acceptState; i != numAcceptingStates; ++i) {
+			acceptState = acceptingStates[i];
 			if (!this.isValidState(acceptState)) {
 				this.cause = "Given accept state index(" + acceptState + ") isn't in the range of "
 						+ this.getStateRange() + ".";
@@ -359,8 +358,7 @@ public class DFA {
 
 	public int[] getAcceptingStates() {
 		int[] result = new int[this.getNumAcceptingStates()];
-		int index = 0;
-		for (int i = 0; i != this.getNumStates(); ++i) {
+		for (int i = 0, index = 0; i != this.getNumStates(); ++i) {
 			if (this.accepting[i]) {
 				result[index++] = i;
 			}
@@ -601,8 +599,7 @@ public class DFA {
 
 	public String[] getTransitions(boolean format, boolean print) {
 		String[] result = new String[this.getTotalNumTransitions()];
-		int index = 0;
-		for (int i = 0; i != this.getNumStates(); ++i) {
+		for (int i = 0, index = 0; i != this.getNumStates(); ++i) {
 			for (int j = 0; j != this.getInputAlphabetSize(); ++j) {
 				result[index++] = this.getTransition(i, j, format);
 				System.out.print(print ? (result[index - 1] + '\n') : "");
@@ -697,9 +694,9 @@ public class DFA {
 	}
 
 	public String[] getDefinedTransitions(boolean format, boolean print) {
-		int index = 0, numDef = this.getNumDefinedTransitions();
+		int numDef = this.getNumDefinedTransitions();
 		String[] result = new String[numDef];
-		for (int i = 0; i != this.getNumStates() && index != numDef; ++i) {
+		for (int i = 0, index = 0; i != this.getNumStates() && index != numDef; ++i) {
 			for (int j = 0; j != this.getInputAlphabetSize() && index != numDef; ++j) {
 				if (this.defined[i][j]) {
 					result[index++] = this.getTransition(i, j, format);
@@ -876,7 +873,7 @@ public class DFA {
 			return (format ? "The empty string" : "");
 		}
 
-		StringBuilder result = new StringBuilder("");
+		StringBuilder result = new StringBuilder();
 		String minChar = this.inputAlphabet[0];
 		if (format) {
 			result.append("\"" + minChar);
@@ -943,7 +940,7 @@ public class DFA {
 			return (format ? "The empty string" : "");
 		}
 
-		StringBuilder result = new StringBuilder("");
+		StringBuilder result = new StringBuilder();
 		String maxChar = this.inputAlphabet[this.getMaxInputIndex()];
 		if (format) {
 			result.append("\"" + maxChar);
@@ -1218,7 +1215,7 @@ public class DFA {
 			return (format ? "The empty string" : "");
 		}
 
-		StringBuilder output = new StringBuilder("");
+		StringBuilder output = new StringBuilder();
 		if (format) {
 			output.append("\"" + this.inputAlphabet[testString.get(0)]);
 			for (int i = 1; i != testString.size(); ++i) {
@@ -1665,7 +1662,7 @@ public class DFA {
 
 			// Process comments
 			this.setIncludeComments(DFA.DEFAULT_INCLUDE_COMMENTS);
-			StringBuilder comments = new StringBuilder("");
+			StringBuilder comments = new StringBuilder();
 			while (in.hasNextLine()) {
 				comments.append(in.nextLine() + '\n');
 				++this.lineNumber;
@@ -1914,8 +1911,7 @@ public class DFA {
 
 	public String[] resetTransitions() {
 		String[] result = new String[this.getTotalNumTransitions()];
-		int index = 0;
-		for (int i = 0; i != this.getNumStates(); ++i) {
+		for (int i = 0, index = 0; i != this.getNumStates(); ++i) {
 			this.stateNumDefined[i] = 0;
 			for (int j = 0; j != this.getInputAlphabetSize(); ++j) {
 				result[index++] = this.resetTransition(i, j);
@@ -1966,8 +1962,7 @@ public class DFA {
 
 	public String[] resetDefinedTransitions() {
 		String[] result = new String[this.getNumDefinedTransitions()];
-		int index = 0;
-		for (int i = 0; i != this.getNumStates() && this.getNumDefinedTransitions() != 0; ++i) {
+		for (int i = 0, index = 0; i != this.getNumStates() && this.getNumDefinedTransitions() != 0; ++i) {
 			for (int j = 0; j != this.getInputAlphabetSize() && this.getNumDefinedTransitions() != 0; ++j) {
 				if (this.defined[i][j]) {
 					result[index++] = this.resetTransition(i, j);
@@ -2126,7 +2121,6 @@ public class DFA {
 			this.incrementTestString(testString);
 		}
 		elapsedTime = DFA.nano2Milli(System.nanoTime() - beforeTime);
-		;
 		this.time = DFA.formatTime(elapsedTime);
 
 		this.actualStringCount = Math.min(this.getMaxStringCount(), count);
@@ -2327,7 +2321,7 @@ public class DFA {
 			DFA.timeCalculate(seconds, DFA.SECONDS_PER_MINUTE, minutes);
 		}
 
-		final StringBuilder s = new StringBuilder("");
+		final StringBuilder s = new StringBuilder();
 		DFA.timeAppend(s, days.get(), "day");
 		DFA.timeAppend(s, hours.get(), "hour");
 		DFA.timeAppend(s, minutes.get(), "minute");
@@ -2373,12 +2367,15 @@ public class DFA {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof DFA)) {
+		return ((obj instanceof DFA) ? this.equals((DFA) obj) : false);
+	}
+
+	public boolean equals(DFA other) {
+		if (other == null) {
 			return false;
+		} else if (this == other) {
+			return true;
 		}
-		final DFA other = (DFA) obj;
 
 		if (this.getNumStates() != other.getNumStates()) {
 			return false;
@@ -2429,7 +2426,7 @@ public class DFA {
 		if (!this.strChange) {
 			return this.savedStr;
 		}
-		StringBuilder output = new StringBuilder("");
+		StringBuilder output = new StringBuilder();
 
 		// First line
 		output.append(this.getNumStates() + " " + this.getInputAlphabetSize() + " " + this.getNumAcceptingStates() + " "
@@ -2456,7 +2453,7 @@ public class DFA {
 		}
 
 		// Command line
-		StringBuilder command = new StringBuilder("");
+		StringBuilder command = new StringBuilder();
 		if (this.getMaxStringCount() == 0) {
 			output.append("0");
 		} else {
@@ -2506,7 +2503,8 @@ public class DFA {
 			return false;
 		}
 
-		StringBuilder name = new StringBuilder(fileName.charAt(0));
+		StringBuilder name = new StringBuilder();
+		name.append(fileName.charAt(0));
 		for (int i = 1; i != fileName.length(); ++i) {
 			char c = fileName.charAt(i);
 			if (c != '.' && c != '-' && c != '_') {
