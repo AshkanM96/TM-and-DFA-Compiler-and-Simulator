@@ -750,8 +750,7 @@ public class TMS {
 
 	public String[] getTransitions(boolean format, boolean print) {
 		String[] result = new String[this.getTotalNumTransitions()];
-		int index = 0;
-		for (int i = 0; i != this.getAcceptState(); ++i) {
+		for (int i = 0, index = 0; i != this.getAcceptState(); ++i) {
 			for (int j = 0; j != this.getTapeAlphabetSize(); ++j) {
 				result[index++] = this.getTransition(i, j, format);
 				System.out.print(print ? (result[index - 1] + '\n') : "");
@@ -846,9 +845,9 @@ public class TMS {
 	}
 
 	public String[] getDefinedTransitions(boolean format, boolean print) {
-		int index = 0, numDef = this.getNumDefinedTransitions();
+		int numDef = this.getNumDefinedTransitions();
 		String[] result = new String[numDef];
-		for (int i = 0; i != this.getAcceptState() && index != numDef; ++i) {
+		for (int i = 0, index = 0; i != this.getAcceptState() && index != numDef; ++i) {
 			for (int j = 0; j != this.getTapeAlphabetSize() && index != numDef; ++j) {
 				if (this.defined[i][j]) {
 					result[index++] = this.getTransition(i, j, format);
@@ -926,7 +925,7 @@ public class TMS {
 				this.cause += " on line " + this.lineNumber;
 			}
 			this.cause += "(" + direction + ") isn't a valid direction(one of ";
-			StringBuilder s = new StringBuilder("");
+			StringBuilder s = new StringBuilder();
 			for (int i = 0; i != this.getNumValidDirections(); ++i) {
 				s.append(this.validDirections[i] + (i != this.getNumValidDirections() - 1 ? ", " : ""));
 			}
@@ -960,8 +959,7 @@ public class TMS {
 		String[] result = null;
 		if (!this.getIncludeStill() && this.stillCount != 0) {
 			result = new String[this.stillCount];
-			int index = 0;
-			for (int i = 0; i != this.getAcceptState() && this.stillCount != 0; ++i) {
+			for (int i = 0, index = 0; i != this.getAcceptState() && this.stillCount != 0; ++i) {
 				for (int j = 0; j != this.getTapeAlphabetSize() && this.stillCount != 0; ++j) {
 					if (this.direction[i][j].equals(TMS.STILL)) {
 						result[index++] = this.resetTransition(i, j);
@@ -1092,7 +1090,7 @@ public class TMS {
 			return (format ? "The empty string" : "");
 		}
 
-		StringBuilder result = new StringBuilder("");
+		StringBuilder result = new StringBuilder();
 		String minChar = this.inputAlphabet[0];
 		if (format) {
 			result.append("\"" + minChar);
@@ -1159,7 +1157,7 @@ public class TMS {
 			return (format ? "The empty string" : "");
 		}
 
-		StringBuilder result = new StringBuilder("");
+		StringBuilder result = new StringBuilder();
 		String maxChar = this.inputAlphabet[this.getMaxInputIndex()];
 		if (format) {
 			result.append("\"" + maxChar);
@@ -1461,7 +1459,7 @@ public class TMS {
 			return (format ? "The empty string" : "");
 		}
 
-		StringBuilder output = new StringBuilder("");
+		StringBuilder output = new StringBuilder();
 		if (format) {
 			output.append("\"" + this.inputAlphabet[testString.get(0)]);
 			for (int i = 1; i != testString.size(); ++i) {
@@ -2030,7 +2028,7 @@ public class TMS {
 
 			// Process comments
 			this.setIncludeComments(TMS.DEFAULT_INCLUDE_COMMENTS);
-			StringBuilder comments = new StringBuilder("");
+			StringBuilder comments = new StringBuilder();
 			while (in.hasNextLine()) {
 				comments.append(in.nextLine() + '\n');
 				++this.lineNumber;
@@ -2319,8 +2317,7 @@ public class TMS {
 
 	public String[] resetTransitions() {
 		String[] result = new String[this.getTotalNumTransitions()];
-		int index = 0;
-		for (int i = 0; i != this.getAcceptState(); ++i) {
+		for (int i = 0, index = 0; i != this.getAcceptState(); ++i) {
 			this.stateNumDefined[i] = 0;
 			for (int j = 0; j != this.getTapeAlphabetSize(); ++j) {
 				result[index++] = this.resetTransition(i, j);
@@ -2373,8 +2370,7 @@ public class TMS {
 
 	public String[] resetDefinedTransitions() {
 		String[] result = new String[this.getNumDefinedTransitions()];
-		int index = 0;
-		for (int i = 0; i != this.getAcceptState() && this.getNumDefinedTransitions() != 0; ++i) {
+		for (int i = 0, index = 0; i != this.getAcceptState() && this.getNumDefinedTransitions() != 0; ++i) {
 			for (int j = 0; j != this.getTapeAlphabetSize() && this.getNumDefinedTransitions() != 0; ++j) {
 				if (this.defined[i][j]) {
 					String direction = this.direction[i][j];
@@ -2903,7 +2899,7 @@ public class TMS {
 				H = { "hour", "h" };
 		final int index = shortForm ? 1 : 0;
 
-		final StringBuilder s = new StringBuilder("");
+		final StringBuilder s = new StringBuilder();
 		TMS.timeAppend(s, months.get(), "month");
 		TMS.timeAppend(s, weeks.get(), "week");
 		TMS.timeAppend(s, days.get(), "day");
@@ -2964,12 +2960,15 @@ public class TMS {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof TMS)) {
+		return ((obj instanceof TMS) ? this.equals((TMS) obj) : false);
+	}
+
+	public boolean equals(TMS other) {
+		if (other == null) {
 			return false;
+		} else if (this == other) {
+			return true;
 		}
-		final TMS other = (TMS) obj;
 
 		if (this.getNumStates() != other.getNumStates()) {
 			return false;
@@ -3021,7 +3020,7 @@ public class TMS {
 		if (!this.strChange) {
 			return this.savedStr;
 		}
-		StringBuilder output = new StringBuilder("");
+		StringBuilder output = new StringBuilder();
 
 		// First line
 		output.append(
@@ -3046,7 +3045,7 @@ public class TMS {
 		if (this.getMaxStringCount() == 0) {
 			output.append("0");
 		} else {
-			StringBuilder command = new StringBuilder("");
+			StringBuilder command = new StringBuilder();
 			command.append(
 					(this.getMaxStringCount() == TMS.DEFAULT_MAX_STRING_COUNT ? TMS.DEFAULT : this.getMaxStringCount())
 							+ " ");
@@ -3112,7 +3111,8 @@ public class TMS {
 			return false;
 		}
 
-		StringBuilder name = new StringBuilder(fileName.charAt(0));
+		StringBuilder name = new StringBuilder();
+		name.append(fileName.charAt(0));
 		for (int i = 1; i != fileName.length(); ++i) {
 			char c = fileName.charAt(i);
 			if (c != '.' && c != '-' && c != '_') {
