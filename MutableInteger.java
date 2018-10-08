@@ -9,6 +9,9 @@ public class MutableInteger extends Number implements Comparable<MutableInteger>
 	 */
 	private static final long serialVersionUID = 7034951900087644980L;
 
+	/**
+	 * The object's primitive value.
+	 */
 	private int value;
 
 	/**

@@ -9,6 +9,9 @@ public class MutableLong extends Number implements Comparable<MutableLong> {
 	 */
 	private static final long serialVersionUID = -3922068836463903832L;
 
+	/**
+	 * The object's primitive value.
+	 */
 	private long value;
 
 	/**
